@@ -1,8 +1,31 @@
-app.controller("MapCntrl", ["$scope", function($scope){
+app.controller("MapCntrl", ["$scope", "mainService", function($scope, mainService){
 	var width = 1000,
 	height = 600,
 	centered;
 
+	var destination = mainService.unique(globalArray["DestinationCity"]);
+	var avgMarketPrice;
+	var statesList = [];
+	
+	destination.shift();
+	
+	for(h = 1; h < destination.length; h++){
+		avgMarketPrice = 0;
+		for(k=1; k < globalArray["DestinationCity"].length; k++){
+			if((globalArray["DestinationCity"])[k] == destination[h]){
+				avgMarketPrice += parseFloat(globalArray["MarketAvgPrice"][k]);
+			}
+		}
+		statesList.push({'state':destination[h], 'price':avgMarketPrice});
+	}
+	
+	console.log(statesList);
+	
+	
+	var color = d3.scale.category20();
+	
+	var states = {};
+	
 	var projection = d3.geo.albersUsa()
 	.scale(1070)
 	.translate([width / 2, height / 2]);
@@ -54,20 +77,39 @@ app.controller("MapCntrl", ["$scope", function($scope){
 	.attr("dx", "1em")
 	.text(function(d) { return d.key; });
 
-	d3.json("xpo/controllers/us.json", function(error, us) {
+	queue()
+    .defer(d3.json, "xpo/controllers/us.json")
+    .defer(d3.json, "xpo/controllers/usStates.json")
+    .await(ready);
+	
+	//d3.json("xpo/controllers/us-states.json", function(error, us) {
 		// draw states
+	
+	function ready(error, us, states){
+		 var countries = topojson.feature(us, us.objects.states).features,
+         neighbors = topojson.neighbors(us.objects.states.geometries);
+
+		 console.log(neighbors);
+		 
+		 for (var i = 0; i < states.length; i++) {
+	        states = topojson.feature(states[i], states[i].objects.stdin);
+	      }
+		 
 		stateGroup.append("g")
 		.attr("id", "states")
 		.selectAll("path")
-		.data(topojson.feature(us, us.objects.states).features)
+		.data(countries)
 		.enter().append("path")
 		.attr("d", path)
-		.on("click", clicked);
+		.on("click", clicked)
+		.style("fill", function(d, i) { return color(d.color = d3.max(neighbors[i], function(n) { return countries[n].color; }) + 1 | 0); })
 
 		stateGroup.append("path")
 		.datum(topojson.mesh(us, us.objects.states, function(a, b) { return a !== b; }))
 		.attr("id", "state-borders")
 		.attr("d", path);
+		
+		
 
 	/*	d3.csv("/public/xpo/controllers/nasacenters.csv", function(error, data) {
 			// Draw images after drawing paths.
@@ -171,7 +213,7 @@ app.controller("MapCntrl", ["$scope", function($scope){
 
 		});*/
 
-	});
+	};
 
 	function clicked(d) {
 		var x, y, k;
