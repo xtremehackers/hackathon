@@ -4,20 +4,22 @@ app.controller("MainController", ['$scope', '$http', '$timeout', '$window', 'mai
 	$scope.graphs.programsClicked = false;
 	$scope.graphs.homeClicked = true;
 	$scope.graphs.isFileLoaded = false;
-	
+
 	$scope.graphs.items = [];
 
 	$scope.isLoginPage = false;
-
+	
+	$scope.originCities = new Array();
+	$scope.destinationCities = new Array();
 	/*if(!sessionStorage.getItem('user')){
 		$location.path("/login");
 	}
-	*/
-	
+	 */
+
 	var url1 = '';
 	var count = 0;
 	$scope.getFile = function () {
-		
+
 		cfpLoadingBar.start();
 //		var url1 = window.location.href.split('#!')[0] + 'resources/Master_dashboard_V3.0.csv';
 		fileReader.readAsDataUrl($scope.graphs.file, $scope) 
@@ -25,10 +27,10 @@ app.controller("MainController", ['$scope', '$http', '$timeout', '$window', 'mai
 			url1 = result;
 
 			$http.get(url1).success(function(allText) {
-				
-			/*	var myNewArray = CSVtoArray(allText);
+
+				/*	var myNewArray = CSVtoArray(allText);
 				console.log(myNewArray);*/
-				
+
 				var allTextLines = allText.split(/\r\n|\n/);
 				var headers = allTextLines[0].split(',');
 				var lines = [];
@@ -57,38 +59,86 @@ app.controller("MainController", ['$scope', '$http', '$timeout', '$window', 'mai
 				}
 				console.log(globalArray, count);
 
-
+				for(var i=1; i< globalArray.OrderId.length; i++)
+				{
+					if(dataArray == undefined)
+						dataArray = new Array();
+					if(destinationCities == undefined)
+						destinationCities = new Array();
+					if(sourceCities == undefined)
+						sourceCities = new Array();
+					
+					sourceCities.push({ id : i , cityName: globalArray.OriginCity[i]});
+					destinationCities.push({ id : i , cityName:globalArray.DestinationCity[i]});
+					dataArray.push({
+						OrderId: globalArray.OrderId[i],
+						BillingDistance: globalArray.BillingDistance[i],
+						DataProviderCode: globalArray.DataProviderCode[i],
+						DeliveredDate : globalArray.DeliveredDate[i],
+						DestinationCity: globalArray.DestinationCity[i],
+						DestinationCountryCode : globalArray.DestinationCountryCode[i],
+						DestinationLatitude: globalArray.DestinationLatitude[i],
+						DestinationLongitude:  globalArray.DestinationLongitude[i],
+						DestinationPostalCode: globalArray.DestinationPostalCode[i],
+						DestinationStateCode:  globalArray.DestinationStateCode[i],
+						MarketAvgCost:  globalArray.MarketAvgCost[i],
+						MarketAvgCostPerMile:  globalArray.MarketAvgCostPerMile[i],
+						MarketAvgPrice:  globalArray.MarketAvgPrice[i],
+						MarketAvgPricePerMile:  globalArray.MarketAvgPricePerMile[i],
+						MarketMaxCost:  globalArray.MarketMaxCost[i],
+						MarketMaxCostPerMile:  globalArray.MarketMaxCostPerMile[i],
+						MarketMaxPrice:  globalArray.MarketMaxPrice[i],
+						MarketMinCost:  globalArray.MarketMinCost[i],
+						MarketMinCostPerMile:  globalArray.MarketMinCostPerMile[i],
+						MarketMinPrice:  globalArray.MarketMinPrice[i],
+						MarketMinPricePerMile:  globalArray.MarketMinPricePerMile[i],
+						
+						OriginCity: globalArray.OriginCity[i],
+						OriginCountryCode: globalArray.OriginCountryCode[i],
+						OriginLatitude: globalArray.OriginLatitude[i],
+						OriginLongitude : globalArray.OriginLongitude[i],
+						OriginPostalCode: globalArray.OriginPostalCode[i],
+						OriginStateCode : globalArray.OriginStateCode[i],
+						OurRatePerMile: globalArray.OurRatePerMile[i],
+						OurTransportationCost:  globalArray.OurTransportationCost[i],
+						PriceDate: globalArray.PriceDate[i]
+					});
+				}
+				
+				$scope.originCities = sourceCities.uniquecity();
+				$scope.selectedOriginCity = $scope.originCities[0];
+				$scope.destinationCities = destinationCities.uniquecity();
 				$scope.homeClicked = true;
 				//$scope.graphs.setDetails();
 				$scope.graphs.isFileLoaded = true;
 				$rootScope.$broadcast('fileLoaded');
 			});
 		});
-		
+
 		cfpLoadingBar.complete();
 	};
 
 	function CSVtoArray(text) {
-	    var re_valid = /^\s*(?:'[^'\\]*(?:\\[\S\s][^'\\]*)*'|"[^"\\]*(?:\\[\S\s][^"\\]*)*"|[^,'"\s\\]*(?:\s+[^,'"\s\\]+)*)\s*(?:,\s*(?:'[^'\\]*(?:\\[\S\s][^'\\]*)*'|"[^"\\]*(?:\\[\S\s][^"\\]*)*"|[^,'"\s\\]*(?:\s+[^,'"\s\\]+)*)\s*)*$/;
-	    var re_value = /(?!\s*$)\s*(?:'([^'\\]*(?:\\[\S\s][^'\\]*)*)'|"([^"\\]*(?:\\[\S\s][^"\\]*)*)"|([^,'"\s\\]*(?:\s+[^,'"\s\\]+)*))\s*(?:,|$)/g;
-	    // Return NULL if input string is not well formed CSV string.
-	    if (!re_valid.test(text)) return null;
-	    var a = [];                     // Initialize array to receive values.
-	    text.replace(re_value, // "Walk" the string using replace with callback.
-	        function(m0, m1, m2, m3) {
-	            // Remove backslash from \' in single quoted values.
-	            if      (m1 !== undefined) a.push(m1.replace(/\\'/g, "'"));
-	            // Remove backslash from \" in double quoted values.
-	            else if (m2 !== undefined) a.push(m2.replace(/\\"/g, '"'));
-	            else if (m3 !== undefined) a.push(m3);
-	            return ''; // Return empty string.
-	        });
-	    // Handle special case of empty last value.
-	    if (/,\s*$/.test(text)) a.push('');
-	    return a;
+		var re_valid = /^\s*(?:'[^'\\]*(?:\\[\S\s][^'\\]*)*'|"[^"\\]*(?:\\[\S\s][^"\\]*)*"|[^,'"\s\\]*(?:\s+[^,'"\s\\]+)*)\s*(?:,\s*(?:'[^'\\]*(?:\\[\S\s][^'\\]*)*'|"[^"\\]*(?:\\[\S\s][^"\\]*)*"|[^,'"\s\\]*(?:\s+[^,'"\s\\]+)*)\s*)*$/;
+		var re_value = /(?!\s*$)\s*(?:'([^'\\]*(?:\\[\S\s][^'\\]*)*)'|"([^"\\]*(?:\\[\S\s][^"\\]*)*)"|([^,'"\s\\]*(?:\s+[^,'"\s\\]+)*))\s*(?:,|$)/g;
+		// Return NULL if input string is not well formed CSV string.
+		if (!re_valid.test(text)) return null;
+		var a = [];                     // Initialize array to receive values.
+		text.replace(re_value, // "Walk" the string using replace with callback.
+				function(m0, m1, m2, m3) {
+			// Remove backslash from \' in single quoted values.
+			if      (m1 !== undefined) a.push(m1.replace(/\\'/g, "'"));
+			// Remove backslash from \" in double quoted values.
+			else if (m2 !== undefined) a.push(m2.replace(/\\"/g, '"'));
+			else if (m3 !== undefined) a.push(m3);
+			return ''; // Return empty string.
+		});
+		// Handle special case of empty last value.
+		if (/,\s*$/.test(text)) a.push('');
+		return a;
 	};
-	
-	
+
+
 	$scope.isPath = function (route) {
 		return route === $location.path();
 
@@ -129,37 +179,37 @@ app.controller("MainController", ['$scope', '$http', '$timeout', '$window', 'mai
 		$scope.graphs.vaveClicked = false;
 		$scope.graphs.setDetails();
 	}
-	
+
 	angular.element($window).on('resize', function(){ 
 		//$scope.sizeChange();
 		//resizeAll();
 	})
-	
+
 	/*$scope.sizeChange = function() {
 		console.log("size change");
 		d3.select("g").attr("transform", "scale(" + $("#worldMap").width()/900 + ")");
 	    $("svg").height($("#worldMap").width()*0.618);
-		
+
 		//$scope.$broadcast('resized');
 	}*/
-	
+
 	function resizeAll() {
-	  d3.selectAll('svg').call(scaleSvg);
+		d3.selectAll('svg').call(scaleSvg);
 	}
 
 	function scaleSvg(sel) {
-	  sel.each(function() {
-	    // split the viewbox into its component parts
-	    var vbArray = d3.select(this).attr('viewBox').split(' ');
-	    // find the ratio of height to width
-	    var heightWidthRatio = +vbArray[3] / +vbArray[2];
-	    // get the width of the body (or you could use some other container)
-	    var w = document.body.offsetWidth;
-	    // set the width and height of the element
-	    d3.select(this)
-	      .attr('width', w)
-	      .attr('height', w * heightWidthRatio);
-	  });
+		sel.each(function() {
+			// split the viewbox into its component parts
+			var vbArray = d3.select(this).attr('viewBox').split(' ');
+			// find the ratio of height to width
+			var heightWidthRatio = +vbArray[3] / +vbArray[2];
+			// get the width of the body (or you could use some other container)
+			var w = document.body.offsetWidth;
+			// set the width and height of the element
+			d3.select(this)
+			.attr('width', w)
+			.attr('height', w * heightWidthRatio);
+		});
 	}
-	
+
 }]);
