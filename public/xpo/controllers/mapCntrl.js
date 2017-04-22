@@ -54,7 +54,7 @@ app.controller("MapCntrl", ["$scope", function($scope){
 	.attr("dx", "1em")
 	.text(function(d) { return d.key; });
 
-	d3.json("http://bl.ocks.org/mbostock/raw/4090846/us.json", function(error, us) {
+	d3.json("xpo/controllers/us.json", function(error, us) {
 		// draw states
 		stateGroup.append("g")
 		.attr("id", "states")
