@@ -212,4 +212,67 @@ app.controller("MainController", ['$scope', '$http', '$timeout', '$window', 'mai
 		});
 	}
 
+	$scope.UpdateBarChart = function (obj) {
+		var value = parseInt($('select :selected').val());
+	    var tempArrayAvg = new Array();
+	    tempArrayAvg.push("Market average price");
+
+	    var tempArrayMarketMax = new Array();
+	    tempArrayMarketMax.push("Market max price");
+
+	    var tempArrayMarketMin = new Array();
+	    tempArrayMarketMin.push("Market min price");
+
+	    var tempCityArray = new Array();
+
+	    for (var i = 0; i < dataArray.length; i++) {
+	        if ($scope.originCities[value].cityName == dataArray[i].OriginCity) {
+	            tempArrayAvg.push(dataArray[i].MarketAvgPrice);
+	            tempArrayMarketMax.push(dataArray[i].MarketMaxPrice);
+	            tempArrayMarketMin.push(dataArray[i].MarketMinPrice);
+	            tempCityArray.push(dataArray[i].DestinationCity);
+	        }
+	        //MarketMinPrice
+	        //MarketAvgPrice
+	        //MarketMaxPrice
+	    }
+
+	    var chart = c3.generate({
+	        bindto: d3.select("#modelBar"),
+	        data: {
+	            columns: [
+                    tempArrayMarketMin,
+                    tempArrayMarketMax,
+                    tempArrayAvg
+	            ],
+	            type: 'bar'
+	        },
+	        bar: {
+	            width: {
+	                ratio: 0.5 // this makes bar width 50% of length between ticks
+	            }
+	            // or
+	            //width: 100 // this makes bar width 100px
+	        },
+	        axis: {
+	            x: {
+	                type: 'category',
+	                categories: tempCityArray,
+	                tick: {
+	                    rotate: -15,
+	                    multiline: false,
+	                    fit: true,
+	                    centered: true,
+	                    culling: {
+	                        max: 1
+	                    }
+	                }
+	            }
+	        },
+	        zoom: {
+	            enabled: true
+	        }
+	    });
+	}
+
 }]);
