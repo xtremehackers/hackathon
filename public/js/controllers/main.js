@@ -5,7 +5,7 @@ app
 
     .controller('templateCtrl', function($timeout, $state, growlService){
         //Welcome Message
-        growlService.growl('Welcome Admin !', 'inverse')
+        growlService.growl('Welcome XPO !', 'inverse')
         
         
         // Detact Mobile Browser
