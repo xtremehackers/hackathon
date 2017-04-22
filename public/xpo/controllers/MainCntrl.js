@@ -252,6 +252,9 @@ app.controller("MainController", ['$scope', '$http', '$timeout', '$window', 'mai
 
 	    var chart = c3.generate({
 	        bindto: d3.select("#modelBar"),
+	        padding: {
+	        	bottom: 60
+	        },
 	        data: {
 	            columns: [
                     tempArrayMarketMin,
@@ -286,6 +289,69 @@ app.controller("MainController", ['$scope', '$http', '$timeout', '$window', 'mai
 	            enabled: true
 	        }
 	    });
+	}
+	
+	
+	
+	
+	$scope.onChartTypeChange = function(chartType){
+		var tempRateArray = new Array();
+		tempRateArray.push("Rate chart for origin");
+		var destinationArray = new Array();
+		
+		for(var i = 0; i<atlantaData.length; i++)
+		{
+			tempRateArray.push(atlantaData[i].Rate);
+			destinationArray.push(atlantaData[i].Destination);
+		}
+		
+		var chart = c3.generate({
+	        bindto: d3.select("#rateChartBar"),
+	        padding: {
+	        	bottom: 70
+	        },
+	        data: {
+	            columns: [
+                    tempRateArray,
+	            ],
+	            type: chartType.toLowerCase()
+	        },
+	        bar: {
+	            width: {
+	                ratio: 0.5 // this makes bar width 50% of length between ticks
+	            }
+	            // or
+	            //width: 100 // this makes bar width 100px
+	        },
+	        axis: {
+	            x: {
+	                type: 'category',
+	                categories: destinationArray,
+	                tick: {
+	                    rotate: -30,
+	                    multiline: false,
+	                    fit: true,
+	                    centered: true
+	                    
+	                }
+	            }
+	        },
+	        zoom: {
+	            enabled: true
+	        }
+	    });
+	}
+	
+	
+	var changeRateChart = function(){
+		$scope.chartTypes = ['Line', 'Bar', 'Area'];
+		$scope.selectedChartType = 'Bar';
+		$scope.onChartTypeChange($scope.selectedChartType);
+	}
+	
+	
+	$scope.getAtalantaData = function(){
+		changeRateChart();
 	}
 
 }]);
