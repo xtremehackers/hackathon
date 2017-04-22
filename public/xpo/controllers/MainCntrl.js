@@ -275,7 +275,7 @@ app.controller("MainController", ['$scope', '$http', '$timeout', '$window', 'mai
 	                type: 'category',
 	                categories: tempCityArray,
 	                tick: {
-	                    rotate: -15,
+	                    rotate: -30,
 	                    multiline: false,
 	                    fit: true,
 	                    centered: true,
