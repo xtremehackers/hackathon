@@ -22,7 +22,7 @@
 
     </head>
 
-    <body ng-controller="MainController" data-current-skin={{mactrl.currentSkin}} data-ng-class="{ 'sw-toggled': mactrl.layoutType === '1', 'modal-open': mactrl.sidebarToggle.left === true }">
+    <body data-ng-controller="MainController" data-current-skin={{mactrl.currentSkin}} data-ng-class="{ 'sw-toggled': mactrl.layoutType === '1', 'modal-open': mactrl.sidebarToggle.left === true }">
 
 
         <data ui-view></data>
