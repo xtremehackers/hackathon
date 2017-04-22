@@ -1,34 +1,33 @@
-<header id="header" data-ng-include="'template/header.html'" data-ng-controller="headerCtrl as hctrl"></header>
+<header id="header" data-ng-include="'template/header.html'"
+	data-ng-controller="headerCtrl as hctrl"></header>
 
 <section id="main">
-    <aside id="sidebar" data-ng-include="'template/sidebar-left.html'" data-ng-class="{ 'toggled': mactrl.sidebarToggle.left === true }"></aside>
+	<aside id="sidebar" data-ng-include="'template/sidebar-left.html'"
+		data-ng-class="{ 'toggled': mactrl.sidebarToggle.left === true }"></aside>
 
-    <aside id="chat" data-ng-include="'template/sidebar-right.html'" data-ng-class="{ 'toggled': mactrl.sidebarToggle.right === true }"></aside>
+	<aside id="chat" data-ng-include="'template/sidebar-right.html'"
+		data-ng-class="{ 'toggled': mactrl.sidebarToggle.right === true }"></aside>
 
-    <section id="content">
+	<section id="content">
 
-        <div class="container">
-            <div class="block-header">
-                <h2>Market Movement / Cost Visualization</h2>
+		<div class="container">
+			<div class="block-header">
+				<h2>Market Movement / Cost Visualization</h2>
 
-                <ul class="actions">
-                
-                    <li class="dropdown" dropdown>
-                        <a href="" dropdown-toggle>
-                            <i class="zmdi zmdi-more-vert"></i>
-                        </a>
+				<ul class="actions">
 
-                        <ul class="dropdown-menu dropdown-menu-right">
-                            <li>
-                                <a href="">Refresh</a>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
+					<li class="dropdown" dropdown><a href="" dropdown-toggle>
+							<i class="zmdi zmdi-more-vert"></i>
+					</a>
 
-            </div>
+						<ul class="dropdown-menu dropdown-menu-right">
+							<li><a href="">Refresh</a></li>
+						</ul></li>
+				</ul>
 
-            <!-- <div class="mini-charts">
+			</div>
+
+			<!-- <div class="mini-charts">
                 <div class="row">
                     <div class="col-sm-6 col-md-3">
                         <div class="mini-charts-item bgm-cyan">
@@ -79,9 +78,14 @@
                     </div>
                 </div>
             </div> -->
-            <div id="maps" ng-controller="MapCntrl" ng-if="graphs.isFileLoaded"></div>
-        </div>
-    </section>
+
+			<center>
+
+				<div id="maps" ng-controller="MapCntrl" ng-if="graphs.isFileLoaded"></div>
+
+			</center>
+		</div>
+	</section>
 </section>
 
 <footer id="footer" data-ng-include="'template/footer.html'"></footer>

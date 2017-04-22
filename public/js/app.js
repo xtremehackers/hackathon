@@ -9,6 +9,7 @@ var app = angular.module('app', [
 ]);
 
 var globalArray = [];
+var atlantaData = [];
 var dataArray = new Array();
 var destinationCities = new Array();
 var sourceCities = new Array();

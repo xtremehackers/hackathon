@@ -1,5 +1,18 @@
-app.controller("MainController", ['$scope', '$http', '$timeout', '$window', 'mainService', '$location', 'fileReader','cfpLoadingBar', '$rootScope', function($scope, $http, $timeout, $window, mainService, $location, fileReader, cfpLoadingBar, $rootScope){
+app.controller("MainController", ['$scope', '$http', '$timeout', '$window', 'mainService', '$location', 'fileReader','cfpLoadingBar', '$rootScope','appService', function($scope, $http, $timeout, $window, mainService, $location, fileReader, cfpLoadingBar, $rootScope, appService){
 
+	
+	appService.fetchExcelData().success(function(response){
+		
+		for(var i=1; i< response[0].length; i++){
+			atlantaData.push({'Destination':response[0][i]['Destination'],
+				'Origin':response[0][i]['Origin'],
+				'Rate':response[0][i]['Rate']
+			});
+		}
+		
+		/*console.log(atlantaData);*/
+	});
+	
 	$scope.graphs = {};
 	$scope.graphs.programsClicked = false;
 	$scope.graphs.homeClicked = true;

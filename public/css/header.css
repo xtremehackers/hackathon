@@ -513,4 +513,50 @@
     background: rgba(0,0,0,.7);
 }
 
+
+[data-current-skin="lightblue"] .c3-tooltip tr {
+    border: 1px solid rgba(0,0,0,0.9);
+}
+
+[data-current-skin="lightblue"] .c3-tooltip th {
+	background: rgba(0,0,0,0.9) !important;
+}
+
+[data-current-skin="lightblue"] .c3-tooltip td {
+	background: rgba(0,0,0,0.9) !important;
+}
+
+[data-current-skin="lightblue"] .c3-axis-y text {
+   fill: #fff !important;
+   font-size:12px;
+}
+[data-current-skin="lightblue"] .c3-axis-x text {
+	fill: #fff !important;
+    font-size:12px;
+}
+
+[data-current-skin="lightblue"] path.domain {
+	stroke: #fff; 
+}
+
+[data-current-skin="lightblue"] .c3-legend-item text {
+	fill: #fff !important; 
+}
+
+[data-current-skin="lightblue"] .c3 g.tick line{ 
+  stroke: #fff !important;
+}
+
+[data-current-skin="lightblue"] #footer {
+	color: #fff !important;
+}
+
+[data-current-skin="lightblue"] #footer .f-menu > li > a {
+	color: #fff !important;
+}
+
+[data-current-skin="lightblue"] .dropdown-menu>li>a:focus, .dropdown-menu>li>a:hover {
+	background-color: rgba(0,0,0,0.3) !important;
+}
+
 /* End of Digital CSS */
