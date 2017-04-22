@@ -13,16 +13,22 @@ app.controller("MapCntrl", ["$scope", "mainService", function($scope, mainServic
 		avgMarketPrice = 0;
 		for(k=1; k < globalArray["DestinationCity"].length; k++){
 			if((globalArray["DestinationCity"])[k] == destination[h]){
+				latitude = globalArray["DestinationLatitude"][k];
+				longitude = globalArray["DestinationLongitude"][k];
 				avgMarketPrice += parseFloat(globalArray["MarketAvgPrice"][k]);
 			}
 		}
-		statesList.push({'state':destination[h], 'price':avgMarketPrice});
+		statesList.push({'state':destination[h], 'value':avgMarketPrice, 'lat':latitude, 'lon':longitude});
 	}
 	
-	console.log(statesList);
+	//console.log(statesList);
 	
 	
 	var color = d3.scale.category20();
+	
+	/*var color = d3.scaleThreshold()
+    .domain(d3.range(2, 10))
+    .range(d3.schemeBlues[9]);*/
 	
 	var states = {};
 	
@@ -79,7 +85,7 @@ app.controller("MapCntrl", ["$scope", "mainService", function($scope, mainServic
 
 	queue()
     .defer(d3.json, "xpo/controllers/us.json")
-    .defer(d3.json, "xpo/controllers/usStates.json")
+    .defer(d3.json, "xpo/controllers/us-states.json")
     .await(ready);
 	
 	//d3.json("xpo/controllers/us-states.json", function(error, us) {
@@ -89,27 +95,71 @@ app.controller("MapCntrl", ["$scope", "mainService", function($scope, mainServic
 		 var countries = topojson.feature(us, us.objects.states).features,
          neighbors = topojson.neighbors(us.objects.states.geometries);
 
-		 console.log(neighbors);
-		 
-		 for (var i = 0; i < states.length; i++) {
+		 //console.log(states);
+		 /*for (var i = 0; i < states.length; i++) {
 	        states = topojson.feature(states[i], states[i].objects.stdin);
 	      }
 		 
-		stateGroup.append("g")
-		.attr("id", "states")
-		.selectAll("path")
-		.data(countries)
-		.enter().append("path")
-		.attr("d", path)
-		.on("click", clicked)
-		.style("fill", function(d, i) { return color(d.color = d3.max(neighbors[i], function(n) { return countries[n].color; }) + 1 | 0); })
+		 console.log(states);*/
 
-		stateGroup.append("path")
-		.datum(topojson.mesh(us, us.objects.states, function(a, b) { return a !== b; }))
-		.attr("id", "state-borders")
-		.attr("d", path);
-		
-		
+		 for (var i = 0; i < statesList.length; i++) {
+			 //Grab state name
+			 var dataState = statesList[i].state;
+
+			 //Grab data value, and convert from string to float
+			 var dataValue = parseFloat(statesList[i].value);
+
+			 //Find the corresponding state inside the GeoJSON
+			 for (var j = 0; j < states.features.length; j++) {
+
+				 var jsonState = states.features[j].properties.name;
+
+				 if (dataState.toLowerCase() == jsonState.toLowerCase()) {
+
+					 //Copy the data value into the JSON
+					 states.features[j].properties.value = dataValue;
+
+					 //Stop looking through the JSON
+					 break;
+
+				 }else{
+					 states.features[j].properties.value = 0;
+					 break;
+				 }
+			 }
+		 }	
+		 
+		 //console.log(states);
+		 
+		 stateGroup.append("g")
+		 .attr("id", "states")
+		 .selectAll("path")
+		 .data(states.features)
+		 .enter().append("path")
+		 .attr("d", path)
+		 .on("click", clicked)
+		 .style("fill", function(d, i) { return color(d.color = d3.max(states.features[i], function(n) { return states.features[n].properties.value; }) + 1 | 0); })
+		 
+		 stateGroup.append("path")
+		 .datum(topojson.mesh(us, us.objects.states, function(a, b) { return a !== b; }))
+		 .attr("id", "state-borders")
+		 .attr("d", path);
+		 
+		 
+		 svg.selectAll("circle")
+         .data(statesList)
+         .enter()
+         .append("circle")
+         .attr("cx", function(d) {
+        	 	console.log(d.lon, d.lat);
+                 return projection([d.lon, d.lat])?projection([d.lon, d.lat])[0]:0;
+         })
+         .attr("cy", function(d) {
+                 return projection([d.lon, d.lat])?projection([d.lon, d.lat])[1]:0;
+         })
+         .attr("r", 5)
+         .style("fill", "yellow")
+         .style("opacity", 0.75);
 
 	/*	d3.csv("/public/xpo/controllers/nasacenters.csv", function(error, data) {
 			// Draw images after drawing paths.
