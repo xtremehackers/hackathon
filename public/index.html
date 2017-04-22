@@ -22,7 +22,7 @@
 
     </head>
 
-    <body data-current-skin={{mactrl.currentSkin}} data-ng-class="{ 'sw-toggled': mactrl.layoutType === '1', 'modal-open': mactrl.sidebarToggle.left === true }">
+    <body ng-controller="MainController" data-current-skin={{mactrl.currentSkin}} data-ng-class="{ 'sw-toggled': mactrl.layoutType === '1', 'modal-open': mactrl.sidebarToggle.left === true }">
 
 
         <data ui-view></data>
@@ -83,6 +83,15 @@
         <script src="js/modules/form.js"></script>
         <script src="js/modules/media.js"></script>
         <script src="js/modules/components.js"></script>
+        
+        <!-- XPO -->
+        
+        <script type="text/javascript" src="xpo/controllers/MainCntrl.js"></script>
+        <script type="text/javascript" src="xpo/directives/fileupload-directive.js"></script>
+        <script type="text/javascript" src="xpo/directives/uploadFileDirective.js"></script>
+        <script type="text/javascript" src="xpo/services/mainService.js"></script>
+        <script type="text/javascript" src="xpo/upload.js"></script>
+        
     </body>
 </html>
 

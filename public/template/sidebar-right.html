@@ -1,10 +1,17 @@
-<div class="chat-search">
-    <div class="fg-line">
-        <input type="text" class="form-control" placeholder="Search..">
-    </div>
-    <br /><br />
-    <div style="text-align: center;">
-        <button class="btn btn-primary" swal-warning>Search</button>
-    </div>
-    
+
+<div class="col-sm-12 rightSidebarDevops">
+	<div>
+		<b>COST</b>
+	</div>
+	<div>Cost Analytics Platform</div>
 </div>
+<br />
+<br />
+<div class="chat-search" style="text-align: center;">
+	<!--<div class="fg-line">         <input type="text" class="form-control" placeholder="Search..">     </div>-->
+	<button id="upfile1" class="btn btn-primary">Upload Dashboard</button>
+	<input type="file" id="file1" name="file1" style="display: none"
+		ng-file-select="onFileSelect($files)" file-model="myFile"
+		accept=".xls, .xlsx, .csv, .tsv" />
+</div>
+<script> $("#upfile1").click(function () {     $("#file1").trigger('click'); }); </script>
