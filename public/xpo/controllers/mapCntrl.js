@@ -139,7 +139,6 @@ app.controller("MapCntrl", ["$scope", "mainService", function($scope, mainServic
 		 .data(states.features)
 		 .enter().append("path")
 		 .attr("d", path)
-		 .on("click", clicked)
 		 .style("fill", function(d, i) { return color(d.color = d3.max(states.features[i], function(n) { return states.features[n].properties.value; }) + 1 | 0); })
 		 
 		 stateGroup.append("path")
