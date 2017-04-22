@@ -1,37 +1,41 @@
-app.controller("MapCntrl", ["$scope", "mainService", function($scope, mainService){
+app.controller("StateMapCntrl", ["$scope", "mainService", function($scope, mainService){
 	var width = 1000,
 	height = 600,
 	centered;
 
-	console.log(mainService.unique(globalArray["OriginStateCode"]));
-	
 	var destination = mainService.unique(globalArray["DestinationCity"]);
 	var avgMarketPrice;
 	var statesList = [];
-	
+	var stateCode = {};
 	destination.shift();
-	
+	var count = 0;
 	for(h = 1; h < destination.length; h++){
 		avgMarketPrice = 0;
+		count = 0;
 		for(k=1; k < globalArray["DestinationCity"].length; k++){
 			if((globalArray["DestinationCity"])[k] == destination[h]){
 				latitude = globalArray["DestinationLatitude"][k];
 				longitude = globalArray["DestinationLongitude"][k];
+				destinationCode = globalArray["DestinationStateCode"][k];
 				avgMarketPrice += parseFloat(globalArray["MarketAvgPrice"][k]);
+				count++;
 			}
 		}
-		statesList.push({'state':destination[h], 'value':avgMarketPrice, 'lat':latitude, 'lon':longitude});
+		stateCode[destinationCode] = avgMarketPrice/count;
+		statesList.push({'state':destination[h], 'code':destinationCode, 'value':avgMarketPrice/count, 'lat':latitude, 'lon':longitude});
 	}
 	
 	//console.log(statesList);
 	
 	
-	var color = d3.scale.category20();
-	
-	/*var color = d3.scaleThreshold()
-    .domain(d3.range(2, 10))
-    .range(d3.schemeBlues[9]);*/
-	
+	//var color = d3.scale.category20();
+	var color = d3.scale.threshold()
+    .domain([
+             d3.min(statesList, function(d) { return d.value; }),
+             d3.max(statesList, function(d) { return d.value; })
+     ])
+    .range(["#deebf7", "#c6dbef", "#9ecae1", "#6baed6", "#4292c6", "#2171b5", "#08519c", "#08306b"]);
+	console.log(color.domain());
 	var states = {};
 	
 	var projection = d3.geo.albersUsa()
@@ -41,13 +45,46 @@ app.controller("MapCntrl", ["$scope", "mainService", function($scope, mainServic
 	var path = d3.geo.path()
 	.projection(projection);
 
+	var x = d3.scale.linear()
+    .domain(color.domain())
+    .rangeRound([600, 860]);
+	
 	var graticule = d3.geo.graticule();
 
-	var svg = d3.select("#maps").append("svg")
+	var svg = d3.select("#stateMap").append("svg")
 	.attr("width", width)
 	.attr("height", height);
 
 	var g = svg.append("g");
+	
+	/*g.selectAll("rect")
+	  .data(color.range().map(function(d) {
+	      d = color.invertExtent(d);
+	      if (d[0] == null) d[0] = x.domain()[0];
+	      if (d[1] == null) d[1] = x.domain()[1];
+	      return d;
+	    }))
+	  .enter().append("rect")
+	    .attr("height", 8)
+	    .attr("x", function(d) { return x(d[0]); })
+	    .attr("width", function(d) { return x(d[1]) - x(d[0]); })
+	    .attr("fill", function(d) { return color(d[0]); });
+
+	g.append("text")
+	    .attr("class", "caption")
+	    .attr("x", x.range()[0])
+	    .attr("y", -6)
+	    .attr("fill", "#000")
+	    .attr("text-anchor", "start")
+	    .attr("font-weight", "bold")
+	    .text("Unemployment rate");
+
+	g.call(d3.axisBottom(x)
+	    .tickSize(13)
+	    .tickFormat(function(x, i) { return i ? x : x + "%"; })
+	    .tickValues(color.domain()))
+	  .select(".domain")
+	    .remove();
 
 	var places = {
 			GSFC: [-76.852587, 38.991621],
@@ -60,7 +97,7 @@ app.controller("MapCntrl", ["$scope", "mainService", function($scope, mainServic
 				places.GSFC,
 				places.KSC
 				]
-	};
+	};*/
 
 //	Setup groups
 //	--------------------------------------
@@ -87,7 +124,7 @@ app.controller("MapCntrl", ["$scope", "mainService", function($scope, mainServic
 
 	queue()
     .defer(d3.json, "xpo/controllers/us.json")
-    .defer(d3.json, "xpo/controllers/us-states.json")
+    .defer(d3.json, "xpo/controllers/usStates.json")
     .await(ready);
 	
 	//d3.json("xpo/controllers/us-states.json", function(error, us) {
@@ -140,29 +177,13 @@ app.controller("MapCntrl", ["$scope", "mainService", function($scope, mainServic
 		 .enter().append("path")
 		 .attr("d", path)
 		 .on("click", clicked)
-		 .style("fill", function(d, i) { return color(d.color = d3.max(states.features[i], function(n) { return states.features[n].properties.value; }) + 1 | 0); })
+		 .style("fill", function(d, i) { return color(stateCode[d.properties.code]); })
 		 
 		 stateGroup.append("path")
 		 .datum(topojson.mesh(us, us.objects.states, function(a, b) { return a !== b; }))
 		 .attr("id", "state-borders")
 		 .attr("d", path);
 		 
-		 
-		 svg.selectAll("circle")
-         .data(statesList)
-         .enter()
-         .append("circle")
-         .attr("cx", function(d) {
-        	 if(projection([d.lon, d.lat]))
-                 return projection([d.lon, d.lat])[0];
-         })
-         .attr("cy", function(d) {
-        	 if(projection([d.lon, d.lat]))
-                 return projection([d.lon, d.lat])[1];
-         })
-         .attr("r", 5)
-         .style("fill", "yellow")
-         .style("opacity", 0.75);
 
 	/*	d3.csv("/public/xpo/controllers/nasacenters.csv", function(error, data) {
 			// Draw images after drawing paths.

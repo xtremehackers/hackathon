@@ -80,9 +80,10 @@
             </div> -->
 
 			<center>
-
-				<div id="maps" ng-controller="MapCntrl" ng-if="graphs.isFileLoaded"></div>
-
+				<div ng-if="graphs.isFileLoaded">
+					<div id="maps" ng-controller="MapCntrl"></div>
+					<div id="stateMap" ng-controller="StateMapCntrl"></div>
+				</div>
 			</center>
 		</div>
 	</section>
