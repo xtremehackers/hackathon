@@ -1,0 +1,17 @@
+{
+  "name": "xpo_logistics_hackathon",
+  "version": "1.0.0",
+  "description": "Market Movement / Cost Visualization",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app"
+  },
+  "dependencies": {
+    "body-parser": "*",
+    "express": "*",
+    "xlsx": "^0.9.12"
+  },
+  "author": "Sunny Puri",
+  "license": "ISC"
+}

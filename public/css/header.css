@@ -1,0 +1,516 @@
+/* Toggle Switch */
+
+
+.toggle-switch {
+    display: inline-block;
+    vertical-align: top;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none
+}
+
+.toggle-switch .ts-label {
+    display: inline-block;
+    margin: 0 20px 0 0;
+    vertical-align: top;
+    -webkit-transition: color .56s cubic-bezier(0.4,0,0.2,1);
+    transition: color .56s cubic-bezier(0.4,0,0.2,1)
+}
+
+.toggle-switch .ts-helper {
+    display: inline-block;
+    position: relative;
+    width: 40px;
+    height: 16px;
+    border-radius: 8px;
+    background: rgba(0,0,0,0.26);
+    -webkit-transition: background .28s cubic-bezier(0.4,0,0.2,1);
+    transition: background .28s cubic-bezier(0.4,0,0.2,1);
+    vertical-align: middle;
+    cursor: pointer
+}
+
+.toggle-switch .ts-helper:before {
+    content: '';
+    position: absolute;
+    top: -4px;
+    left: -4px;
+    width: 24px;
+    height: 24px;
+    background: #fafafa;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.28);
+    border-radius: 50%;
+    webkit-transition: left .28s cubic-bezier(0.4,0,0.2,1),background .28s cubic-bezier(0.4,0,0.2,1),box-shadow .28s cubic-bezier(0.4,0,0.2,1);
+    transition: left .28s cubic-bezier(0.4,0,0.2,1),background .28s cubic-bezier(0.4,0,0.2,1),box-shadow .28s cubic-bezier(0.4,0,0.2,1)
+}
+
+.toggle-switch:not(.disabled) .ts-helper:active:before {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.28),0 0 0 20px rgba(128,128,128,0.1)
+}
+
+.toggle-switch input {
+    position: absolute;
+    z-index: 1;
+    width: 46px;
+    margin: 0 0 0 -4px;
+    height: 24px;
+    opacity: 0;
+    filter: alpha(opacity=0);
+    cursor: pointer
+}
+
+.toggle-switch input:checked + .ts-helper:before {
+    left: 20px
+}
+
+.toggle-switch:not([data-ts-color]) input:not(:disabled):checked + .ts-helper {
+    background: rgba(0,150,136,0.5)
+}
+
+.toggle-switch:not([data-ts-color]) input:not(:disabled):checked + .ts-helper:before {
+    background: #009688
+}
+
+.toggle-switch:not([data-ts-color]) input:not(:disabled):checked + .ts-helper:active:before {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.28),0 0 0 20px rgba(0,150,136,0.2)
+}
+
+.toggle-switch.disabled {
+    opacity: .6;
+    filter: alpha(opacity=60)
+}
+
+.toggle-switch[data-ts-color="red"] input:not(:disabled):checked + .ts-helper {
+    background: rgba(244,67,54,0.5)
+}
+
+.toggle-switch[data-ts-color="red"] input:not(:disabled):checked + .ts-helper:before {
+    background: #f44336
+}
+
+.toggle-switch[data-ts-color="red"] input:not(:disabled):checked + .ts-helper:active:before {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.28),0 0 0 20px rgba(244,67,54,0.2)
+}
+
+.toggle-switch[data-ts-color="blue"] input:not(:disabled):checked + .ts-helper {
+    background: rgba(33,150,243,0.5)
+}
+
+.toggle-switch[data-ts-color="blue"] input:not(:disabled):checked + .ts-helper:before {
+    background: #2196f3
+}
+
+.toggle-switch[data-ts-color="blue"] input:not(:disabled):checked + .ts-helper:active:before {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.28),0 0 0 20px rgba(33,150,243,0.2)
+}
+
+.toggle-switch[data-ts-color="amber"] input:not(:disabled):checked + .ts-helper {
+    background: rgba(255,193,7,0.5)
+}
+
+.toggle-switch[data-ts-color="amber"] input:not(:disabled):checked + .ts-helper:before {
+    background: #ffc107
+}
+
+.toggle-switch[data-ts-color="amber"] input:not(:disabled):checked + .ts-helper:active:before {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.28),0 0 0 20px rgba(255,193,7,0.2)
+}
+
+.toggle-switch[data-ts-color="purple"] input:not(:disabled):checked + .ts-helper {
+    background: rgba(156,39,176,0.5)
+}
+
+.toggle-switch[data-ts-color="purple"] input:not(:disabled):checked + .ts-helper:before {
+    background: #9c27b0
+}
+
+.toggle-switch[data-ts-color="purple"] input:not(:disabled):checked + .ts-helper:active:before {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.28),0 0 0 20px rgba(156,39,176,0.2)
+}
+
+.toggle-switch[data-ts-color="pink"] input:not(:disabled):checked + .ts-helper {
+    background: rgba(233,30,99,0.5)
+}
+
+.toggle-switch[data-ts-color="pink"] input:not(:disabled):checked + .ts-helper:before {
+    background: #e91e63
+}
+
+.toggle-switch[data-ts-color="pink"] input:not(:disabled):checked + .ts-helper:active:before {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.28),0 0 0 20px rgba(233,30,99,0.2)
+}
+
+.toggle-switch[data-ts-color="lime"] input:not(:disabled):checked + .ts-helper {
+    background: rgba(205,220,57,0.5)
+}
+
+.toggle-switch[data-ts-color="lime"] input:not(:disabled):checked + .ts-helper:before {
+    background: #cddc39
+}
+
+.toggle-switch[data-ts-color="lime"] input:not(:disabled):checked + .ts-helper:active:before {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.28),0 0 0 20px rgba(205,220,57,0.2)
+}
+
+.toggle-switch[data-ts-color="cyan"] input:not(:disabled):checked + .ts-helper {
+    background: rgba(0,188,212,0.5)
+}
+
+.toggle-switch[data-ts-color="cyan"] input:not(:disabled):checked + .ts-helper:before {
+    background: #00bcd4
+}
+
+.toggle-switch[data-ts-color="cyan"] input:not(:disabled):checked + .ts-helper:active:before {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.28),0 0 0 20px rgba(0,188,212,0.2)
+}
+
+.toggle-switch[data-ts-color="green"] input:not(:disabled):checked + .ts-helper {
+    background: rgba(76,175,80,0.5)
+}
+
+.toggle-switch[data-ts-color="green"] input:not(:disabled):checked + .ts-helper:before {
+    background: #4caf50
+}
+
+.toggle-switch[data-ts-color="green"] input:not(:disabled):checked + .ts-helper:active:before {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.28),0 0 0 20px rgba(76,175,80,0.2)
+}
+
+
+
+
+/* SKIN */
+
+
+/*
+ * For header type 1 only
+ * You may remove these if you opt header 2
+ */
+
+#header .skin-switch {
+  padding: 15px 0 8px;
+  text-align: center;
+}
+
+#header .ss-skin {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: inline-block;
+  margin: 2px 5px;
+}
+
+/* ----------------------------- End header type 1 ------------------------------------- */
+
+/*
+ * For header type 2 only
+ * You may remove these if you opt header 1
+ */
+
+#header-2 .skin-switch {
+  position: absolute;
+  right: 58px;
+  bottom: 23px;
+  z-index: 1;
+}
+
+#header-2 .skin-switch .btn {
+  background: #fff;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  font-size: 25px;
+  z-index: 2;
+}
+
+#header-2 .skin-switch .dropdown-menu {
+  min-width: 130px;
+  height: 130px;
+  border-radius: 50%;
+  width: 130px;
+  top: -42px;
+  left: -40px;
+  z-index: 1;
+  -webkit-transform-origin: center;
+  -moz-transform-origin: center;
+  -ms-transform-origin: center;
+  transform-origin: center;
+  -webkit-transform: scale(0) rotate(-360deg);
+  -ms-transform: scale(0) rotate(-360deg);
+  -o-transform: scale(0) rotate(-360deg);
+  transform: scale(0) rotate(-360deg);
+  -webkit-transition-duration: 500ms;
+  transition-duration: 500ms;
+}
+
+#header-2 .skin-switch .dropdown-menu .ss-skin {
+  position: absolute;
+}
+
+#header-2 .skin-switch .dropdown-menu .ss-skin:nth-child(1) {
+  margin-left: -8px;
+  top: 12px;
+  left: 50%;
+}
+
+#header-2 .skin-switch .dropdown-menu .ss-skin:nth-child(2) {
+  right: 24px;
+  top: 26px;
+}
+
+#header-2 .skin-switch .dropdown-menu .ss-skin:nth-child(3) {
+  top: 50%;
+  margin-top: -8px;
+  right: 12px;
+}
+
+#header-2 .skin-switch .dropdown-menu .ss-skin:nth-child(4) {
+  right: 24px;
+  bottom: 26px;
+}
+
+#header-2 .skin-switch .dropdown-menu .ss-skin:nth-child(5) {
+  margin-left: -8px;
+  bottom: 12px;
+  left: 50%;
+}
+
+#header-2 .skin-switch .dropdown-menu .ss-skin:nth-child(6) {
+  left: 24px;
+  bottom: 26px;
+}
+
+#header-2 .skin-switch .dropdown-menu .ss-skin:nth-child(7) {
+  top: 50%;
+  margin-top: -8px;
+  left: 12px;
+}
+
+#header-2 .skin-switch .dropdown-menu .ss-skin:nth-child(8) {
+  left: 24px;
+  top: 26px;
+}
+
+#header-2 .skin-switch.open .dropdown-menu {
+  -webkit-transform: scale(1) rotate(0deg);
+  -ms-transform: scale(1) rotate(0deg);
+  -o-transform: scale(1) rotate(0deg);
+  transform: scale(1) rotate(0deg);
+}
+
+
+
+/* Theme Modified */
+
+.ss-skin {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.ss-skin:hover {
+  opacity: 0.8;
+  filter: alpha(opacity=80);
+}
+
+[data-current-skin="lightblue"] header{
+  background-color: #03a9f4 !important;
+}
+
+[data-current-skin="lightblue"] .ss-icon {
+  color: #03a9f4;
+}
+
+@media (max-width: 767px) {
+  [data-current-skin="lightblue"] .ha-menu {
+    background: #03a9f4;
+  }
+}
+
+[data-current-skin="bluegray"] header{
+  background-color: #607d8b !important;
+}
+
+[data-current-skin="bluegray"] .ss-icon {
+  color: #607d8b;
+}
+
+@media (max-width: 767px) {
+  [data-current-skin="bluegray"] .ha-menu {
+    background: #607d8b;
+  }
+}
+
+[data-current-skin="blue"] header{
+  background-color: #2196f3 !important;
+}
+
+[data-current-skin="blue"] .ss-icon {
+  color: #2196f3;
+}
+
+@media (max-width: 767px) {
+  [data-current-skin="blue"] .ha-menu {
+    background: #2196f3;
+  }
+}
+
+[data-current-skin="purple"] header{
+  background-color: #9c27b0;
+}
+
+[data-current-skin="purple"] .ss-icon {
+  color: #9c27b0;
+}
+
+@media (max-width: 767px) {
+  [data-current-skin="purple"] .ha-menu {
+    background: #9c27b0;
+  }
+}
+
+[data-current-skin="orange"] header{
+  background-color: #ff9800 !important;
+}
+
+[data-current-skin="orange"] .ss-icon {
+  color: #ff9800;
+}
+
+@media (max-width: 767px) {
+  [data-current-skin="orange"] .ha-menu {
+    background: #ff9800;
+  }
+}
+
+[data-current-skin="cyan"] header{
+  background-color: #00bcd4 !important;
+}
+
+[data-current-skin="cyan"] .ss-icon {
+  color: #00bcd4;
+}
+
+@media (max-width: 767px) {
+  [data-current-skin="cyan"] .ha-menu {
+    background: #00bcd4;
+  }
+}
+
+[data-current-skin="green"] header{
+  background-color: #4caf50 !important;
+}
+
+[data-current-skin="green"] .ss-icon {
+  color: #4caf50;
+}
+
+@media (max-width: 767px) {
+  [data-current-skin="green"] .ha-menu {
+    background: #4caf50;
+  }
+}
+
+[data-current-skin="teal"] header{
+  background-color: #009688 !important;
+}
+
+[data-current-skin="teal"] .ss-icon {
+  color: #009688;
+}
+
+@media (max-width: 767px) {
+  [data-current-skin="teal"] .ha-menu {
+    background: #009688;
+  }
+}
+
+[data-current-skin="pink"] header{
+  background-color: #e91e63;
+}
+
+[data-current-skin="pink"] .ss-icon {
+  color: #e91e63;
+}
+
+@media (max-width: 767px) {
+  [data-current-skin="pink"] .ha-menu {
+    background: #e91e63;
+  }
+}
+
+
+
+/* End of Theme Modified */
+
+
+
+
+/* Start of Digital Theme */
+
+[data-current-skin="lightblue"]{
+    background-image: url(../img/blue.jpg);
+    background-size: 100% 100%;
+    background-attachment: fixed;
+    color: #fff !important;
+}
+
+
+[data-current-skin="lightblue"] header{
+    background: rgba(0,0,0,0.3) !important;
+}
+
+
+[data-current-skin="lightblue"] .bgm-cyan,[data-current-skin="lightblue"] .bgm-bluegray,[data-current-skin="lightblue"] .bgm-lightgreen,[data-current-skin="lightblue"] .bgm-orange {
+    background: rgba(0,0,0,0.3) !important;
+    background-color: rgba(0,0,0,0.3) !important;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.15);
+}
+
+[data-current-skin="lightblue"] h2{
+    color: #fff !important;
+}
+
+[data-current-skin="lightblue"] aside{
+    background: rgba(0,0,0,0.3) !important;
+    color: #fff !important;
+}
+
+[data-current-skin="lightblue"] #sidebar .main-menu > li.active > a {
+    background: rgba(0,0,0,0.3) !important;
+    color: #fff !important;
+}
+
+[data-current-skin="lightblue"] #sidebar .main-menu > li > a {
+    color: #fff !important;
+}
+
+[data-current-skin="lightblue"] #sidebar .main-menu > li > a:hover {
+    background: rgba(0,0,0,0.3) !important;
+    color: #fff !important;
+}
+
+[data-current-skin="lightblue"] #sidebar .main-menu > li.sub-menu > ul > li > a {
+    color: #fff !important;
+}
+
+[data-current-skin="lightblue"] i{
+    color: #fff !important;
+}
+
+[data-current-skin="lightblue"] .alert-inverse {
+    background: rgba(0,0,0,.6);
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.15);
+    color: #fff
+}
+
+[data-current-skin="lightblue"] #top-search-wrap {
+    background: rgba(0,0,0,.7);
+}
+
+/* End of Digital CSS */

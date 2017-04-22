@@ -1,0 +1,95 @@
+<header id="header" data-ng-include="'template/header.html'" data-ng-controller="headerCtrl as hctrl"></header>
+
+<section id="main">
+    <aside id="sidebar" data-ng-include="'template/sidebar-left.html'" data-ng-class="{ 'toggled': mactrl.sidebarToggle.left === true }"></aside>
+
+    <aside id="chat" data-ng-include="'template/sidebar-right.html'" data-ng-class="{ 'toggled': mactrl.sidebarToggle.right === true }"></aside>
+
+    <section id="content">
+
+        <div class="container">
+            <div class="block-header">
+                <h2>Dashboard</h2>
+
+                <ul class="actions">
+                    <li>
+                        <a href="">
+                            <i class="zmdi zmdi-trending-up"></i>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="">
+                            <i class="zmdi zmdi-check-all"></i>
+                        </a>
+                    </li>
+                    <li class="dropdown" dropdown>
+                        <a href="" dropdown-toggle>
+                            <i class="zmdi zmdi-more-vert"></i>
+                        </a>
+
+                        <ul class="dropdown-menu dropdown-menu-right">
+                            <li>
+                                <a href="">Refresh</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+
+            </div>
+
+            <div class="mini-charts">
+                <div class="row">
+                    <div class="col-sm-6 col-md-3">
+                        <div class="mini-charts-item bgm-cyan">
+                            <div class="clearfix">
+                                <div class="chart stats-bar" data-sparkline-bar></div>
+                                <div class="count">
+                                    <small>Website Traffics</small>
+                                    <h2>123,456</h2>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6 col-md-3">
+                        <div class="mini-charts-item bgm-lightgreen">
+                            <div class="clearfix">
+                                <div class="chart stats-bar-2" data-sparkline-bar></div>
+                                <div class="count">
+                                    <small>Website Impressions</small>
+                                    <h2>456,789K</h2>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6 col-md-3">
+                        <div class="mini-charts-item bgm-orange">
+                            <div class="clearfix">
+                                <div class="chart stats-line" data-sparkline-line></div>
+                                <div class="count">
+                                    <small>Total Sales</small>
+                                    <h2>$ 23,456</h2>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6 col-md-3">
+                        <div class="mini-charts-item bgm-bluegray">
+                            <div class="clearfix">
+                                <div class="chart stats-line-2" data-sparkline-line></div>
+                                <div class="count">
+                                    <small>Support Tickets</small>
+                                    <h2>12,345</h2>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</section>
+
+<footer id="footer" data-ng-include="'template/footer.html'"></footer>
