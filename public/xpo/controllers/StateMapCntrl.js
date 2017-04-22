@@ -177,7 +177,30 @@ app.controller("StateMapCntrl", ["$scope", "mainService", function($scope, mainS
 		 .enter().append("path")
 		 .attr("d", path)
 		 .on("click", clicked)
-		 .style("fill", function(d, i) { return color(stateCode[d.properties.code]); })
+		 .style("fill", function(d, i) { 
+			 console.log(color(stateCode[d.properties.code]), stateCode[d.properties.code]);
+			 return color(stateCode[d.properties.code]); 
+		  })
+		 
+		 
+		 stateGroup.append("g")
+	      .attr("class", "states-names")
+	      .selectAll("text")
+	      .data(states.features)
+	      .enter()
+	      .append("svg:text")
+	      .text(function(d){
+	        return d.properties.code;
+	      })
+	      .attr("x", function(d){
+	          return path.centroid(d)[0];
+	      })
+	      .attr("y", function(d){
+	          return  path.centroid(d)[1];
+	      })
+	      .attr("text-anchor","middle")
+	      .attr('fill', 'white');
+
 		 
 		 stateGroup.append("path")
 		 .datum(topojson.mesh(us, us.objects.states, function(a, b) { return a !== b; }))
