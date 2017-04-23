@@ -172,7 +172,6 @@ app.controller("MapCntrl", ["$scope", "mainService", function($scope, mainServic
          .attr("r", 3)
          .style("fill", "yellow")
          .style("opacity", 0.75)
-         .on("mouseover", mouseover)
          .on("mousemove", function(d){
         	 tooltip
 	         .html(prepareTooltip(d))
@@ -185,17 +184,6 @@ app.controller("MapCntrl", ["$scope", "mainService", function($scope, mainServic
         });
          
          
-          function mouseover() {
-	     div.transition()
-	         .duration(300)
-	         .style("opacity", 1);
-	   }
-	
-	   function mouseout() {
-	     div.transition()
-	         .duration(100)
-	         .style("opacity", 1e-6);
-	   } 
 		 /*.on("mousemove",
 			function(d, i) {
 				tooltip.style("left", (d3.event.layerX+10)+"px");
