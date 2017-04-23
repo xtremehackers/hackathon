@@ -50,7 +50,7 @@ app
         this.wallLink = false;
     
         //Skin Switch
-        this.currentSkin = 'blue';
+        this.currentSkin = 'cyan';
 
         this.skinList = [
             'blue',
