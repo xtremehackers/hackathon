@@ -119,12 +119,13 @@ app.controller("MainController", ['$scope', '$http', '$timeout', '$window', 'mai
 				}
 
 				$scope.originCities = sourceCities.uniquecity();
-				$scope.selectedOriginCity = $scope.originCities[0];
+				$scope.selectedOriginCity = $scope.originCities[0].id;
 				$scope.destinationCities = destinationCities.uniquecity();
 				$scope.homeClicked = true;
 				//$scope.graphs.setDetails();
 				$scope.graphs.isFileLoaded = true;
 				$rootScope.$broadcast('fileLoaded');
+				$scope.UpdateBarChart();
 			});
 		});
 
@@ -229,6 +230,8 @@ app.controller("MainController", ['$scope', '$http', '$timeout', '$window', 'mai
 
 	$scope.UpdateBarChart = function (obj) {
 		var value = parseInt($('select :selected').val());
+		if(value == null || value == undefined || isNaN(value))
+			value = $scope.selectedOriginCity;
 		var tempArrayAvg = new Array();
 		tempArrayAvg.push("Market average price");
 
@@ -383,6 +386,8 @@ app.controller("MainController", ['$scope', '$http', '$timeout', '$window', 'mai
 
 	$scope.UpdateCostBarChart = function (obj) {
 		var value = parseInt($('select :selected').val());
+		if(value == null || value == undefined || isNaN(value))
+			value = $scope.selectedOriginCity;
 		var tempArrayXPOCost = new Array();
 		tempArrayXPOCost.push("XPO transportation cost");
 
@@ -527,7 +532,8 @@ app.controller("MainController", ['$scope', '$http', '$timeout', '$window', 'mai
 
 	$scope.GetOrder = function () {
 		var value = parseInt($('select :selected').val());
-
+		if(value == null || value == undefined || isNaN(value))
+			value = $scope.selectedOriginCity;
 		var tempDataArray = new Array();
 		var tempDateArray = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 

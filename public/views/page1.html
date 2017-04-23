@@ -26,11 +26,16 @@
 
 			</div>
 
-			<div style="text-align: center;">
+			<div style="text-align: center;" ng-init="UpdateBarChart()">
 			<p>Origin City</p>
-				<select
+				<!-- <select
 					ng-options="item.id as item.cityName for item in originCities"
-					ng-model="selectedOriginCity" ng-change="UpdateBarChart(this)"></select>
+					ng-model="selectedOriginCity" ng-change="UpdateBarChart(this)"></select> -->
+					<select ng-model="selectedOriginCity" ng-change="UpdateBarChart(this)">
+						<option ng-repeat="item in originCities" value="{{item.id}}">
+							{{item.cityName}}
+						</option>
+					</select>
 			</div>
 			<br />
 			<div>
