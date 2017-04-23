@@ -608,4 +608,8 @@
 	color: #fff;
 }
 
+[data-current-skin="lightblue"] #sidebar .main-menu > li.sub-menu > a:before,[data-current-skin="lightblue"] #sidebar .main-menu > li.sub-menu > a:after{
+	color: #fff;
+}
+
 /* End of Digital CSS */

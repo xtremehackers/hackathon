@@ -28,29 +28,30 @@
 		<li data-ui-sref-active="active"><a data-ui-sref="home"
 			data-ng-click="mactrl.sidebarStat($event)"><i
 				class="zmdi zmdi-home"></i> Home</a></li>
-		<li data-ui-sref-active="active"><a data-ui-sref="default"
-			data-ng-click="mactrl.sidebarStat($event)"><i
-				class="zmdi zmdi-format-underlined"></i> Menu 1</a></li>
+
 		<li class="sub-menu"
 			data-ng-class="{ 'active toggled': mactrl.$state.includes('widgets') }">
-			<a href="" toggle-submenu><i class="zmdi zmdi-widgets"></i> Menu
-				2</a>
+			<a href="" toggle-submenu><i class="zmdi zmdi-widgets"></i>
+				Market Visualization</a>
 
 			<ul>
-				<li data-ui-sref-active="active"><a
-					data-ui-sref="page1"
-					data-ng-click="mactrl.sidebarStat($event)">Sub Menu 1</a></li>
-				<li data-ui-sref-active="active"><a
+				<li data-ui-sref-active="active"><a data-ui-sref="page1"
+					data-ng-click="mactrl.sidebarStat($event)">Statistics</a></li>
+				<!-- <li data-ui-sref-active="active"><a
 					data-ui-sref="page2"
-					data-ng-click="mactrl.sidebarStat($event)">Sub Menu 2</a></li>
-				<li data-ui-sref-active="active"><a
-					data-ui-sref="page3"
-					data-ng-click="mactrl.sidebarStat($event)">Sub Menu 3</a></li>
+					data-ng-click="mactrl.sidebarStat($event)">Sub Menu 2</a></li> -->
+				<li data-ui-sref-active="active"><a data-ui-sref="page3"
+					data-ng-click="mactrl.sidebarStat($event)">Regional Transport
+						Price</a></li>
 			</ul>
 		</li>
 		<!-- <li data-ui-sref-active="active"><a data-ui-sref="default"
 			data-ng-click="mactrl.sidebarStat($event)"><i
 				class="zmdi zmdi-format-underlined"></i> Menu 3</a></li> -->
+
+		<li data-ui-sref-active="active"><a data-ui-sref="default"
+			data-ng-click="mactrl.sidebarStat($event)"><i
+				class="zmdi zmdi-format-underlined"></i> Tool Info</a></li>
 		<li data-ui-sref-active="active"><a href="javascript:void(0)"
 			swal-timer><i class="zmdi zmdi-format-underlined"></i> About Us</a></li>
 	</ul>
