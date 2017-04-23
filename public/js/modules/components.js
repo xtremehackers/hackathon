@@ -116,9 +116,9 @@ app
             link: function(scope, element, attrs) {
                 element.click(function(){
                      swal({   
-                        title: "Auto close alert!",   
-                        text: "I will close in 2 seconds.",   
-                        timer: 2000,   
+                        title: "Market Movement / Cost Visualization",   
+                        text: "Present a visualization strategy that highlights volume of freight movements. The visualization strategy should incorporate a methodology of basic statistics (i.e. the average cost to move between zones). Your visualization should also compare with third party index cost data.",   
+                        timer: 3000,   
                         showConfirmButton: false 
                     });
                 });

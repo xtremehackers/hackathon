@@ -596,5 +596,16 @@
 	color: #fff !important;
 }
 
+[data-current-skin="lightblue"] input,[data-current-skin="lightblue"] button,[data-current-skin="lightblue"] select,[data-current-skin="lightblue"] textarea{
+	background-color: rgba(0,0,0,0.3) !important;
+}
+
+[data-current-skin="lightblue"] .sweet-alert{
+	background-color: rgba(0,0,0,0.3) !important;
+}
+
+[data-current-skin="lightblue"] .lead{
+	color: #fff;
+}
 
 /* End of Digital CSS */
