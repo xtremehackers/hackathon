@@ -88,6 +88,9 @@ app.controller("StateMapCntrl", ["$scope", "mainService", function($scope, mainS
 	var svg = d3.select("#stateMap").append("svg")
 	.attr("width", width)
 	.attr("height", height);
+	
+	var tooltip = d3.select("#stateMap").append("div").attr("class",
+	"toolTip");
 
 	var g = svg.append("g");
     /*.attr("class", "key")
@@ -225,11 +228,20 @@ app.controller("StateMapCntrl", ["$scope", "mainService", function($scope, mainS
 		 .data(states.features)
 		 .enter().append("path")
 		 .attr("d", path)
-		 .on("click", clicked)
+		 //.on("click", clicked)
 		 .style("fill", function(d, i) { 
 			 //console.log(color(floorAvgPrice(stateCode[d.properties.code])), floorAvgPrice(stateCode[d.properties.code]));
 			 return color(floorAvgPrice(stateCode[d.properties.code])); 
-		  })
+		  }).on("mousemove", function(d){
+	        	 tooltip
+		         .html('XPO Transportation Cost : ' + stateCode[d.properties.code].toFixed(2))
+		         .style("left", (d3.event.pageX - 34) + "px")
+		         .style("top", (d3.event.pageY - 12) + "px")
+	        	 .style("display", "inline-block");
+	         })
+	         .on("mouseout", function(d){
+	        	 tooltip.style("display", "none");
+	        });
 		 
 		 
 		 stateGroup.append("g")

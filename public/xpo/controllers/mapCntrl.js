@@ -97,7 +97,7 @@ app.controller("MapCntrl", ["$scope", "mainService", function($scope, mainServic
 
 	queue()
     .defer(d3.json, "xpo/controllers/us.json")
-    .defer(d3.json, "xpo/controllers/us-states.json")
+    .defer(d3.json, "xpo/controllers/usStates.json")
     .await(ready);
 	
 	//d3.json("xpo/controllers/us-states.json", function(error, us) {
@@ -150,6 +150,26 @@ app.controller("MapCntrl", ["$scope", "mainService", function($scope, mainServic
 		 .enter().append("path")
 		 .attr("d", path)
 		 .style("fill", function(d, i) { return color(d.color = d3.max(states.features[i], function(n) { return states.features[n].properties.value; }) + 1 | 0); })
+		 
+		 stateGroup.append("g")
+	      .attr("class", "states-names")
+	      .selectAll("text")
+	      .data(states.features)
+	      .enter()
+	      .append("svg:text")
+	      .text(function(d){
+	        return d.properties.code;
+	      })
+	      .attr("x", function(d){
+	    	  if(path.centroid(d)[0])
+	    		  return path.centroid(d)[0];
+	      })
+	      .attr("y", function(d){
+	    	  if(path.centroid(d)[1])
+	          	return  path.centroid(d)[1];
+	      })
+	      .attr("text-anchor","middle")
+	      .attr('fill', 'white');
 		 
 		 stateGroup.append("path")
 		 .datum(topojson.mesh(us, us.objects.states, function(a, b) { return a !== b; }))
