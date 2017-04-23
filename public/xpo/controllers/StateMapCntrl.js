@@ -59,7 +59,7 @@ app.controller("StateMapCntrl", ["$scope", "mainService", function($scope, mainS
      ])*/
 	.domain(priceList)
     .range(["#000000", "#380000", "#580000", "#780000", "#980000", "#980000", "#B80000", "#D80000", "#F80000", "#FFFFFF"]);
-	console.log(color.domain());
+	//console.log(color.domain());
 	var states = {};
 	
 	var projection = d3.geo.albersUsa()
@@ -202,7 +202,7 @@ app.controller("StateMapCntrl", ["$scope", "mainService", function($scope, mainS
 		 .attr("d", path)
 		 .on("click", clicked)
 		 .style("fill", function(d, i) { 
-			 console.log(color(floorAvgPrice(stateCode[d.properties.code])), floorAvgPrice(stateCode[d.properties.code]));
+			 //console.log(color(floorAvgPrice(stateCode[d.properties.code])), floorAvgPrice(stateCode[d.properties.code]));
 			 return color(floorAvgPrice(stateCode[d.properties.code])); 
 		  })
 		 

@@ -3,7 +3,9 @@ app.controller("MapCntrl", ["$scope", "mainService", function($scope, mainServic
 	height = 600,
 	centered;
 
-	console.log(mainService.unique(globalArray["OriginStateCode"]));
+	var tooltipText = '<h4> City: %heading </h4><p> Order Count: %val1</p>';
+	
+	//console.log(mainService.unique(globalArray["OriginStateCode"]));
 	
 	var destination = mainService.unique(globalArray["DestinationCity"]);
 	var avgMarketPrice;
@@ -13,14 +15,18 @@ app.controller("MapCntrl", ["$scope", "mainService", function($scope, mainServic
 	
 	for(h = 1; h < destination.length; h++){
 		avgMarketPrice = 0;
+		xpoCost = 0;
+		count = 0;
 		for(k=1; k < globalArray["DestinationCity"].length; k++){
 			if((globalArray["DestinationCity"])[k] == destination[h]){
 				latitude = globalArray["DestinationLatitude"][k];
 				longitude = globalArray["DestinationLongitude"][k];
 				avgMarketPrice += parseFloat(globalArray["MarketAvgPrice"][k]);
+				xpoCost += parseFloat(globalArray["OurTransportationCost"][k]);
+				count++;
 			}
 		}
-		statesList.push({'state':destination[h], 'value':avgMarketPrice, 'lat':latitude, 'lon':longitude});
+		statesList.push({'city':destination[h], 'value':avgMarketPrice/count, 'lat':latitude, 'lon':longitude, 'orderCount':count, 'profit':(avgMarketPrice-xpoCost)});
 	}
 	
 	//console.log(statesList);
@@ -43,10 +49,14 @@ app.controller("MapCntrl", ["$scope", "mainService", function($scope, mainServic
 
 	var graticule = d3.geo.graticule();
 
+	
 	var svg = d3.select("#maps").append("svg")
 	.attr("width", width)
 	.attr("height", height);
 
+	var tooltip = d3.select("#maps").append("div").attr("class",
+	"toolTip");
+	
 	var g = svg.append("g");
 
 	var places = {
@@ -106,7 +116,7 @@ app.controller("MapCntrl", ["$scope", "mainService", function($scope, mainServic
 
 		 for (var i = 0; i < statesList.length; i++) {
 			 //Grab state name
-			 var dataState = statesList[i].state;
+			 var dataState = statesList[i].city;
 
 			 //Grab data value, and convert from string to float
 			 var dataValue = parseFloat(statesList[i].value);
@@ -159,9 +169,53 @@ app.controller("MapCntrl", ["$scope", "mainService", function($scope, mainServic
         	 if(projection([d.lon, d.lat]))
                  return projection([d.lon, d.lat])[1];
          })
-         .attr("r", 5)
+         .attr("r", 3)
          .style("fill", "yellow")
-         .style("opacity", 0.75);
+         .style("opacity", 0.75)
+         .on("mouseover", mouseover)
+         .on("mousemove", function(d){
+        	 tooltip
+	         .html(prepareTooltip(d))
+	         .style("left", (d3.event.pageX - 34) + "px")
+	         .style("top", (d3.event.pageY - 12) + "px")
+        	 .style("display", "inline-block");
+         })
+         .on("mouseout", function(d){
+        	 tooltip.style("display", "none");
+        });
+         
+         
+          function mouseover() {
+	     div.transition()
+	         .duration(300)
+	         .style("opacity", 1);
+	   }
+	
+	   function mouseout() {
+	     div.transition()
+	         .duration(100)
+	         .style("opacity", 1e-6);
+	   } 
+		 /*.on("mousemove",
+			function(d, i) {
+				tooltip.style("left", (d3.event.layerX+10)+"px");
+				tooltip.style("top", (d3.event.layerY+10)+"px");
+				tooltip.style("display", "inline-block")
+				tooltip.html(function(){
+					return d.city + " " + prepareTooltip(d);
+				});
+			}).on("mouseout", function(d){
+				tooltip.style("display", "none");
+	        });*/
+		
+		 
+		 prepareTooltip = function(object){
+			 var str = tooltipText;
+				str = str.replace("%heading", object['city'].toUpperCase());
+				str = str.replace("%val1", object['orderCount']);
+				//str = "City :  " + object['city']  + "\nCount : " + object['orderCount'];
+				return str;
+			}
 
 	/*	d3.csv("/public/xpo/controllers/nasacenters.csv", function(error, data) {
 			// Draw images after drawing paths.
