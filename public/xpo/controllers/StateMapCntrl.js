@@ -28,13 +28,37 @@ app.controller("StateMapCntrl", ["$scope", "mainService", function($scope, mainS
 	//console.log(statesList);
 	
 	
+	function floorAvgPrice(price){
+		if(price){
+			var price2 = parseInt(price);
+			var priceLength = price2.toString().length;
+			return (parseInt(price) - (parseInt(price) % Math.pow(10, (priceLength-1))));
+		}else{
+			return 0;
+		}
+			
+	}
+	
 	//var color = d3.scale.category20();
+	var increment = 500;
+	var startPrice =  0;
+	var endPrice =  floorAvgPrice(d3.max(statesList, function(d) { return d.value; })) + increment;
+	var priceList = [];
+	price = startPrice;
+	while(price <= endPrice){
+		priceList.push(price);
+		price += increment;
+	}
+	
+	console.log(priceList);
+	
 	var color = d3.scale.threshold()
-    .domain([
-             d3.min(statesList, function(d) { return d.value; }),
-             d3.max(statesList, function(d) { return d.value; })
-     ])
-    .range(["#deebf7", "#c6dbef", "#9ecae1", "#6baed6", "#4292c6", "#2171b5", "#08519c", "#08306b"]);
+    /*.domain([
+             floorAvgPrice(d3.min(statesList, function(d) { return d.value; })),
+             floorAvgPrice(d3.max(statesList, function(d) { return d.value; }))
+     ])*/
+	.domain(priceList)
+    .range(["#000000", "#380000", "#580000", "#780000", "#980000", "#980000", "#B80000", "#D80000", "#F80000", "#FFFFFF"]);
 	console.log(color.domain());
 	var states = {};
 	
@@ -45,9 +69,9 @@ app.controller("StateMapCntrl", ["$scope", "mainService", function($scope, mainS
 	var path = d3.geo.path()
 	.projection(projection);
 
-	var x = d3.scale.linear()
+	/*var x = d3.scale.linear()
     .domain(color.domain())
-    .rangeRound([600, 860]);
+    .rangeRound([600, 860]);*/
 	
 	var graticule = d3.geo.graticule();
 
@@ -178,8 +202,8 @@ app.controller("StateMapCntrl", ["$scope", "mainService", function($scope, mainS
 		 .attr("d", path)
 		 .on("click", clicked)
 		 .style("fill", function(d, i) { 
-			 console.log(color(stateCode[d.properties.code]), stateCode[d.properties.code]);
-			 return color(stateCode[d.properties.code]); 
+			 console.log(color(floorAvgPrice(stateCode[d.properties.code])), floorAvgPrice(stateCode[d.properties.code]));
+			 return color(floorAvgPrice(stateCode[d.properties.code])); 
 		  })
 		 
 		 
