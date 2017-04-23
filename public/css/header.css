@@ -613,3 +613,48 @@
 }
 
 /* End of Digital CSS */
+
+
+
+[data-current-skin="cyan"] .panel-primary > .panel-heading{
+	background-color: #cc0000;
+}
+
+
+[data-current-skin="cyan"] input, [data-current-skin="cyan"] button, [data-current-skin="cyan"] select, [data-current-skin="cyan"] textarea {
+    background-color: #cc0000;
+}
+
+[data-current-skin="cyan"] header {
+    background: #fff !important;
+}
+
+[data-current-skin="cyan"] .top-menu > li > a.tm-search {
+    background-color: #cc0000;
+}
+
+[data-current-skin="cyan"] .top-menu > li > a.tm-settings {
+    background-color: #cc0000;
+}
+
+[data-current-skin="cyan"] .top-menu > li > a.tm-chat {
+    background-color: #cc0000;
+}
+
+[data-current-skin="cyan"] #menu-trigger .line-wrap .line {
+    background-color: #cc0000;
+}
+
+[data-current-skin="cyan"] input, [data-current-skin="cyan"] button, [data-current-skin="cyan"] select, [data-current-skin="cyan"] textarea {
+    background-color: #cc0000;
+    color: #fff !important;
+}
+
+[data-current-skin="cyan"] .btn-primary.disabled,[data-current-skin="cyan"] .btn-primary[disabled],[data-current-skin="cyan"] .btn-primary fieldset[disabled],[data-current-skin="cyan"] .btn-primary:hover,[data-current-skin="cyan"] .btn-primary:focus,[data-current-skin="cyan"] .btn-primary.focus,[data-current-skin="cyan"] .btn-primary:active {
+    background-color: #cc0000;
+    border-color: #cc0000;
+}
+
+[data-current-skin="cyan"] h2 {
+    color: #cc0000 !important;
+}
