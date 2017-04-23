@@ -33,7 +33,7 @@
 			</div>
 			<br />
 			<div>
-				
+
 				<div class="panel panel-primary">
 					<div class="panel-heading">
 
@@ -43,20 +43,50 @@
 						<div id="modelBar"></div>
 					</div>
 				</div>
-				
-				<br /><br />
-                <div class="panel panel-primary">
-                    <div class="panel-heading">
 
-                        <i class="zmdi zmdi-trending-up"></i> Market Cost Comparison
-                        Graph
-                    </div>
-                    <div class="panel-body">
-                        <div id="modelCostBar"></div>
-                    </div>
-                </div>
-				
-				<br /><br />
+				<br /> <br />
+				<div class="panel panel-primary">
+					<div class="panel-heading">
+
+						<i class="zmdi zmdi-trending-up"></i> Market Cost Comparison Graph
+					</div>
+					<div class="panel-body">
+						<div id="modelCostBar"></div>
+					</div>
+				</div>
+
+				<br /> <br />
+				<div class="panel panel-primary">
+					<div class="panel-heading">
+
+						<i class="zmdi zmdi-trending-up"></i> Market cost comparison Graph
+					</div>
+					<div class="panel-body">
+						<p ng-hide="isNutralFrequency">
+							Least Frequent Destinations: <ul><li
+								ng-repeat="item in leastFrequentDestination">
+								{{item.val}} </li></ul>
+						</p>
+
+						<p ng-hide="isNutralFrequency">Most Frequent Destinations:
+						<ul>
+							<li ng-repeat="item in mostFrequentDestination">
+								{{item.val}}</li>
+						</ul>
+						</p>
+
+						<p ng-show="isNutralFrequency">Fright movement is normal for
+							destinations:
+						<ul>
+							<li ng-repeat="item in mostFrequentDestination">
+								{{item.val}}</li>
+						</ul>
+						</p>
+					</div>
+				</div>
+
+
+				<br /> <br />
 				<div class="panel panel-primary">
 					<div class="panel-heading">
 
@@ -66,9 +96,9 @@
 						<div id="modelBarDate"></div>
 					</div>
 				</div>
-			
-			
-				
+
+
+
 			</div>
 		</div>
 
