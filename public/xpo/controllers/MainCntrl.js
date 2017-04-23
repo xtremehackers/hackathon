@@ -250,6 +250,11 @@ app.controller("MainController", ['$scope', '$http', '$timeout', '$window', 'mai
 	        //MarketMaxPrice
 	    }
 
+	    var chartColorArray = new Array();
+	    chartColorArray.push("#1dd09c");
+	    chartColorArray.push("#8c7cac");
+	    chartColorArray.push("#9c3773");
+	    
 	    var chart = c3.generate({
 	        bindto: d3.select("#modelBar"),
 	        padding: {
@@ -287,8 +292,12 @@ app.controller("MainController", ['$scope', '$http', '$timeout', '$window', 'mai
 	        },
 	        zoom: {
 	            enabled: true
+	        },
+	        color: {
+	            pattern: chartColorArray
 	        }
 	    });
+	    $scope.GetOrder();
 	}
 	
 	
@@ -304,6 +313,11 @@ app.controller("MainController", ['$scope', '$http', '$timeout', '$window', 'mai
 			tempRateArray.push(atlantaData[i].Rate);
 			destinationArray.push(atlantaData[i].Destination);
 		}
+		
+		/*var chartColorArray = new Array();
+	    chartColorArray.push("#1dd09c");
+	    chartColorArray.push("#8c7cac");
+	    chartColorArray.push("#9c3773");*/
 		
 		var chart = c3.generate({
 	        bindto: d3.select("#rateChartBar"),
@@ -340,6 +354,8 @@ app.controller("MainController", ['$scope', '$http', '$timeout', '$window', 'mai
 	            enabled: true
 	        }
 	    });
+		
+		
 	}
 	
 	
@@ -353,5 +369,85 @@ app.controller("MainController", ['$scope', '$http', '$timeout', '$window', 'mai
 	$scope.getAtalantaData = function(){
 		changeRateChart();
 	}
+	
+	$scope.GetOrder = function () {
+	    var value = parseInt($('select :selected').val());
+	    
+	    var tempDataArray = new Array();
+	    var tempDateArray = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+	    var ColumnArray = new Array();
+	    
+	    var monthCountArray = new Array();
+
+	    $scope.destinationCityDelivery = new Array();
+
+	    
+	    for (var i = 0; i < dataArray.length; i++) {
+	        if ($scope.originCities[value].cityName == dataArray[i].OriginCity) {
+	            $scope.destinationCityDelivery.push({
+	                Destination: dataArray[i].DestinationCity,
+	                DeliveryDate: dataArray[i].DeliveredDate.split('-')[1],
+	                Orders: dataArray[i].OrderId
+	            });
+	        }
+	    }
+	    for (var i = 0; i < $scope.destinationCityDelivery.length; i++) {
+	            
+
+	        tempDataArray.push($scope.destinationCityDelivery[i].DeliveryDate);
+	    }
+	    
+	    for (var i = 0; i < tempDataArray.length; i++) {
+	        var num = tempDataArray[i];
+	        ColumnArray[num] = ColumnArray[num] ? ColumnArray[num] + 1 : 1;
+	    }
+	    
+	    monthCountArray.push("Monthly volume of freight movement");
+
+	    for (var i = 1; i <= tempDateArray.length; i++) {
+	        monthCountArray[i] = ColumnArray[tempDateArray[i-1]] == undefined ? 0 : ColumnArray[tempDateArray[i-1]];
+	    }
+
+	    
+	    var chart = c3.generate({
+	        bindto: d3.select("#modelBarDate"),
+	        padding: {
+	            bottom: 60
+	        },
+	        data: {
+	            columns: [
+                    monthCountArray
+	            ],
+	            type: 'bar'
+	        },
+	        bar: {
+	            width: {
+	                ratio: 0.5 // this makes bar width 50% of length between ticks
+	            }
+	            // or
+	            //width: 100 // this makes bar width 100px
+	        },
+	        axis: {
+	            x: {
+	                type: 'category',
+	                categories: tempDateArray,
+	                tick: {
+	                    rotate: -15,
+	                    multiline: false,
+	                    fit: true,
+	                    centered: true,
+	                    culling: {
+	                        max: 1
+	                    }
+	                }
+	            }
+	        },
+	        zoom: {
+	            enabled: true
+	        }
+	    });
+	}
+	
 
 }]);
