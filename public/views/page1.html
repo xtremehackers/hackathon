@@ -14,7 +14,7 @@
 			<div class="block-header">
 				<h2>Default</h2>
 
-				<ul class="actions">
+				<!-- <ul class="actions">
 					<li class="dropdown" dropdown><a href="" dropdown-toggle>
 							<i class="zmdi zmdi-more-vert"></i>
 					</a>
@@ -22,17 +22,31 @@
 						<ul class="dropdown-menu dropdown-menu-right">
 							<li><a href="">Refresh</a></li>
 						</ul></li>
-				</ul>
+				</ul> -->
 
 			</div>
 
-			<div>
+			<div style="text-align: center;">
 				<select
 					ng-options="item.id as item.cityName for item in originCities"
 					ng-model="selectedOriginCity" ng-change="UpdateBarChart(this)"></select>
 			</div>
+			<br />
 			<div>
-				<div id="modelBar"></div>
+				
+				<div class="panel panel-primary">
+					<div class="panel-heading">
+
+						<i class="zmdi zmdi-trending-up"></i> Package Complexities Line
+						Graph
+					</div>
+					<div class="panel-body">
+						<div id="modelBar"></div>
+					</div>
+				</div>
+			
+			
+				
 			</div>
 		</div>
 

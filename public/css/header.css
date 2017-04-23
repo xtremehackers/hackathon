@@ -559,4 +559,42 @@
 	background-color: rgba(0,0,0,0.3) !important;
 }
 
+
+[data-current-skin="lightblue"] .panel-primary {
+    border-color: rgba(0,0,0,.7);
+}
+
+[data-current-skin="lightblue"] .panel-primary>.panel-heading {
+    color: #fff;
+    background-color: rgba(0,0,0,0.3) !important;
+    border-color: rgba(0,0,0,.7) !important;
+}
+
+[data-current-skin="lightblue"] .panel {
+    background-color: rgba(0,0,0,0.3) !important;
+}
+
+[data-current-skin="lightblue"] tbody tr {
+	background-color: rgba(0,0,0,0.3) !important;
+	color: #fff !important;
+}
+
+[data-current-skin="lightblue"] .dropdown-menu{
+	background-color: rgba(0,0,0,0.3) !important;
+}
+
+[data-current-skin="lightblue"] .dropdown-menu:not([class*="bgm-"]) > li > a {
+	color: #fff !important;
+}
+
+[data-current-skin="lightblue"] .c-black{
+	color: #fff !important;
+	font-weight: bold !important;
+}
+
+[data-current-skin="lightblue"] .block-header > h2 > small {
+	color: #fff !important;
+}
+
+
 /* End of Digital CSS */
