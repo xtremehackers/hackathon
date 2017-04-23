@@ -27,62 +27,34 @@
 
 			</div>
 
-			<!-- <div class="mini-charts">
-                <div class="row">
-                    <div class="col-sm-6 col-md-3">
-                        <div class="mini-charts-item bgm-cyan">
-                            <div class="clearfix">
-                                <div class="chart stats-bar" data-sparkline-bar></div>
-                                <div class="count">
-                                    <small>Website Traffics</small>
-                                    <h2>123,456</h2>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
 
-                    <div class="col-sm-6 col-md-3">
-                        <div class="mini-charts-item bgm-lightgreen">
-                            <div class="clearfix">
-                                <div class="chart stats-bar-2" data-sparkline-bar></div>
-                                <div class="count">
-                                    <small>Website Impressions</small>
-                                    <h2>456,789K</h2>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+			<div ng-if="graphs.isFileLoaded">
+				
+				<div class="panel panel-primary">
+					<div class="panel-heading">
 
-                    <div class="col-sm-6 col-md-3">
-                        <div class="mini-charts-item bgm-orange">
-                            <div class="clearfix">
-                                <div class="chart stats-line" data-sparkline-line></div>
-                                <div class="count">
-                                    <small>Total Sales</small>
-                                    <h2>$ 23,456</h2>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-sm-6 col-md-3">
-                        <div class="mini-charts-item bgm-bluegray">
-                            <div class="clearfix">
-                                <div class="chart stats-line-2" data-sparkline-line></div>
-                                <div class="count">
-                                    <small>Support Tickets</small>
-                                    <h2>12,345</h2>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div> -->
-
-				<div ng-if="graphs.isFileLoaded">
-					<div id="maps" ng-controller="MapCntrl"></div>
-					<div id="stateMap" ng-controller="StateMapCntrl"></div>
+						<i class="zmdi zmdi-trending-up"></i> Scattered City Markers
+					</div>
+					<div class="panel-body">
+						<div id="maps" ng-controller="MapCntrl"></div>
+					</div>
 				</div>
+				
+				<br /><br />
+				
+				<div class="panel panel-primary">
+					<div class="panel-heading">
+
+						<i class="zmdi zmdi-trending-up"></i> State-wise Transportation Cost 
+					</div>
+					<div class="panel-body">
+						<div id="stateMap" ng-controller="StateMapCntrl"></div>
+					</div>
+				</div>
+			
+				
+				
+			</div>
 
 		</div>
 	</section>
