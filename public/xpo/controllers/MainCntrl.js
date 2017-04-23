@@ -225,6 +225,8 @@ app.controller("MainController", ['$scope', '$http', '$timeout', '$window', 'mai
 		});
 	}
 
+	
+	
 	$scope.UpdateBarChart = function (obj) {
 		var value = parseInt($('select :selected').val());
 	    var tempArrayAvg = new Array();
@@ -238,16 +240,17 @@ app.controller("MainController", ['$scope', '$http', '$timeout', '$window', 'mai
 
 	    var tempCityArray = new Array();
 
+	    var tempDestinationArray = new Array();
+
 	    for (var i = 0; i < dataArray.length; i++) {
 	        if ($scope.originCities[value].cityName == dataArray[i].OriginCity) {
 	            tempArrayAvg.push(dataArray[i].MarketAvgPrice);
 	            tempArrayMarketMax.push(dataArray[i].MarketMaxPrice);
 	            tempArrayMarketMin.push(dataArray[i].MarketMinPrice);
-	            tempCityArray.push(dataArray[i].DestinationCity);
+	            tempCityArray.push(dataArray[i].DestinationCity + "(" + dataArray[i].DestinationPostalCode + ")");
+
+	            tempDestinationArray.push(dataArray[i].DestinationCity);
 	        }
-	        //MarketMinPrice
-	        //MarketAvgPrice
-	        //MarketMaxPrice
 	    }
 
 	    var chartColorArray = new Array();
@@ -258,7 +261,7 @@ app.controller("MainController", ['$scope', '$http', '$timeout', '$window', 'mai
 	    var chart = c3.generate({
 	        bindto: d3.select("#modelBar"),
 	        padding: {
-	        	bottom: 60
+	        	bottom: 90
 	        },
 	        data: {
 	            columns: [
@@ -270,10 +273,8 @@ app.controller("MainController", ['$scope', '$http', '$timeout', '$window', 'mai
 	        },
 	        bar: {
 	            width: {
-	                ratio: 0.5 // this makes bar width 50% of length between ticks
+	                ratio: 0.5
 	            }
-	            // or
-	            //width: 100 // this makes bar width 100px
 	        },
 	        axis: {
 	            x: {
@@ -298,9 +299,96 @@ app.controller("MainController", ['$scope', '$http', '$timeout', '$window', 'mai
 	        }
 	    });
 	    $scope.GetOrder();
+	    $scope.UpdateCostBarChart();
+
+	    //var distinationCityCountArray = {};
+	    ////for (var i = 1; i <= tempDestinationArray.length; i++) {
+	    ////    distinationCityCountArray[i] = distinationCityCountArray[tempDestinationArray[i - 1]] == undefined ? 0 : tempDestinationArray[tempDateArray[i - 1]];
+	    ////}
+
+	    //tempDestinationArray.forEach(function (i) {
+	    //    distinationCityCountArray[i] = (distinationCityCountArray[i] || 0) + 1;
+	    //});
+
+	    //$scope.maxFrequentCities = new Array();
+
 	}
 	
-	
+	$scope.UpdateCostBarChart = function (obj) {
+	    var value = parseInt($('select :selected').val());
+	    var tempArrayXPOCost = new Array();
+	    tempArrayXPOCost.push("XPO transportation cost");
+
+	    var tempArrayMarketMin = new Array();
+	    tempArrayMarketMin.push("Market min transportation cost");
+
+	    var tempArrayMarketMax = new Array();
+	    tempArrayMarketMax.push("Market max transportation cost");
+
+	    var tempArrayMarketAvg = new Array();
+	    tempArrayMarketAvg.push("Market average transportation cost");
+
+	    var tempCityArray = new Array();
+
+	    for (var i = 0; i < dataArray.length; i++) {
+	        if ($scope.originCities[value].cityName == dataArray[i].OriginCity) {
+	            tempArrayMarketMin.push(dataArray[i].MarketMinCostPerMile * dataArray[i].BillingDistance);
+	            tempArrayMarketMax.push(dataArray[i].MarketMaxCostPerMile * dataArray[i].BillingDistance);
+	            tempArrayMarketAvg.push(dataArray[i].MarketAvgCostPerMile * dataArray[i].BillingDistance);
+	            tempArrayXPOCost.push(dataArray[i].OurTransportationCost)
+
+	            tempCityArray.push(dataArray[i].DestinationCity + "(" + dataArray[i].DestinationPostalCode + ")");
+	        }
+	    }
+
+	    var chartColorArray = new Array();
+	    chartColorArray.push("#1dd09c");
+	    chartColorArray.push("#8c7cac");
+	    chartColorArray.push("#9c3773");
+	    chartColorArray.push("#8080ff");
+
+	    var chart = c3.generate({
+	        bindto: d3.select("#modelCostBar"),
+	        padding: {
+	            bottom: 80
+	        },
+	        data: {
+	            columns: [
+                    tempArrayXPOCost,
+                    tempArrayMarketMin,
+                    tempArrayMarketMax,
+                    tempArrayMarketAvg
+	            ],
+	            type: 'bar'
+	        },
+	        bar: {
+	            width: {
+	                ratio: 0.5 
+	            }
+	        },
+	        axis: {
+	            x: {
+	                type: 'category',
+	                categories: tempCityArray,
+	                tick: {
+	                    rotate: -30,
+	                    multiline: false,
+	                    fit: true,
+	                    centered: true,
+	                    culling: {
+	                        max: 1
+	                    }
+	                }
+	            }
+	        },
+	        zoom: {
+	            enabled: true
+	        },
+	        color: {
+	            pattern: chartColorArray
+	        }
+	    });
+	}
 	
 	
 	$scope.onChartTypeChange = function(chartType){
@@ -409,43 +497,59 @@ app.controller("MainController", ['$scope', '$http', '$timeout', '$window', 'mai
 	        monthCountArray[i] = ColumnArray[tempDateArray[i-1]] == undefined ? 0 : ColumnArray[tempDateArray[i-1]];
 	    }
 
-	    
+	    var tempPieArray = [
+            ["Jan", monthCountArray[1]],// == 0 ? 0 : (monthCountArray[1] * 100 / $scope.destinationCityDelivery.length)],
+	        ["Feb", monthCountArray[2]],// == 0 ? 0 : (monthCountArray[2] * 100 / $scope.destinationCityDelivery.length)],
+            ["March", monthCountArray[3]],// == 0 ? 0 : (monthCountArray[3] * 100 / $scope.destinationCityDelivery.length)], ,
+            ["April", monthCountArray[4]],// == 0 ? 0 : (monthCountArray[4] * 100 / $scope.destinationCityDelivery.length)],
+            ["May", monthCountArray[5]],// == 0 ? 0 : (monthCountArray[5] * 100 / $scope.destinationCityDelivery.length)],
+            ["June", monthCountArray[6]],// == 0 ? 0 : (monthCountArray[6] * 100 / $scope.destinationCityDelivery.length)],
+            ["July", monthCountArray[7]],// == 0 ? 0 : (monthCountArray[7] * 100 / $scope.destinationCityDelivery.length)],
+            ["August", monthCountArray[8]],// == 0 ? 0 : (monthCountArray[8] * 100 / $scope.destinationCityDelivery.length)],
+            ["Sepetember", monthCountArray[9]],// == 0 ? 0 : (monthCountArray[9] * 100 / $scope.destinationCityDelivery.length)],
+            ["October", monthCountArray[10]],// == 0 ? 0 : (monthCountArray[10] * 100 / $scope.destinationCityDelivery.length)],
+            ["November", monthCountArray[11]],// == 0 ? 0 : (monthCountArray[11] * 100 / $scope.destinationCityDelivery.length)],
+            ["December", monthCountArray[12]],// == 0 ? 0 : (monthCountArray[12] * 100 / $scope.destinationCityDelivery.length)]
+	    ]
+	    var chartColorArray = ["#003366", "#339966", "#003300", "#3399ff", "#990033", "#9933ff", "#333399", "#cc99ff", "#1dd09c", "#666699", "#33cccc", "#0000cc"];
 	    var chart = c3.generate({
 	        bindto: d3.select("#modelBarDate"),
 	        padding: {
 	            bottom: 60
 	        },
 	        data: {
-	            columns: [
-                    monthCountArray
-	            ],
-	            type: 'bar'
+	            columns: tempPieArray,
+	            type: 'pie'
 	        },
-	        bar: {
-	            width: {
-	                ratio: 0.5 // this makes bar width 50% of length between ticks
-	            }
-	            // or
-	            //width: 100 // this makes bar width 100px
-	        },
-	        axis: {
-	            x: {
-	                type: 'category',
-	                categories: tempDateArray,
-	                tick: {
-	                    rotate: -15,
-	                    multiline: false,
-	                    fit: true,
-	                    centered: true,
-	                    culling: {
-	                        max: 1
-	                    }
-	                }
-	            }
-	        },
-	        zoom: {
-	            enabled: true
+	        color: {
+	            pattern: chartColorArray
 	        }
+	        //,
+	        //bar: {
+	        //    width: {
+	        //        ratio: 0.5 // this makes bar width 50% of length between ticks
+	        //    }
+	        //    // or
+	        //    //width: 100 // this makes bar width 100px
+	        //},
+	        //axis: {
+	        //    x: {
+	        //        type: 'category',
+	        //        categories: tempDateArray,
+	        //        tick: {
+	        //            rotate: -15,
+	        //            multiline: false,
+	        //            fit: true,
+	        //            centered: true,
+	        //            culling: {
+	        //                max: 1
+	        //            }
+	        //        }
+	        //    }
+	        //},
+	        //zoom: {
+	        //    enabled: true
+	        //}
 	    });
 	}
 	
