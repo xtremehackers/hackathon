@@ -52,6 +52,7 @@ path.link {
 
 .toolTip {
     position: absolute;
+    display: none;
     width: auto;
     height: auto;
     background: none repeat scroll 0 0 white;
@@ -66,4 +67,23 @@ path.link {
 
 .toolTip h4 {
 	color: #000 !important;
+}
+
+.key path {
+  display: none;
+}
+
+.key line {
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.legend-title {
+    font-weight: bold;
+}
+
+.legend-box {
+    fill: none;
+    stroke: #888;
+    font-size: 10px;
 }

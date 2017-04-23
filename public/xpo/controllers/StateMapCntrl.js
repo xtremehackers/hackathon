@@ -1,7 +1,17 @@
 app.controller("StateMapCntrl", ["$scope", "mainService", function($scope, mainService){
-	var width = 1000,
+	var width = 1100,
 	height = 600,
+	boxmargin = 4,
+    lineheight = 14,
+    keyheight = 10,
+    keywidth = 40,
+    boxwidth = 3 * keywidth,
 	centered;
+	
+	var title = ['State-wise XPO','Transportation Cost'],
+    titleheight = title.length*lineheight + boxmargin;
+	
+	var margin = { "left": 150, "top": 80 };
 
 	var destination = mainService.unique(globalArray["DestinationCity"]);
 	var avgMarketPrice;
@@ -17,7 +27,7 @@ app.controller("StateMapCntrl", ["$scope", "mainService", function($scope, mainS
 				latitude = globalArray["DestinationLatitude"][k];
 				longitude = globalArray["DestinationLongitude"][k];
 				destinationCode = globalArray["DestinationStateCode"][k];
-				avgMarketPrice += parseFloat(globalArray["MarketAvgPrice"][k]);
+				avgMarketPrice += parseFloat(globalArray["OurTransportationCost"][k]);
 				count++;
 			}
 		}
@@ -58,7 +68,7 @@ app.controller("StateMapCntrl", ["$scope", "mainService", function($scope, mainS
              floorAvgPrice(d3.max(statesList, function(d) { return d.value; }))
      ])*/
 	.domain(priceList)
-    .range(["#000000", "#380000", "#580000", "#780000", "#980000", "#980000", "#B80000", "#D80000", "#F80000", "#FFFFFF"]);
+    .range(["#000000", "#380000", "#580000", "#780000", "#980000", "#980000", "#B80000", "#D80000", "#F80000"]);
 	//console.log(color.domain());
 	var states = {};
 	
@@ -68,11 +78,11 @@ app.controller("StateMapCntrl", ["$scope", "mainService", function($scope, mainS
 
 	var path = d3.geo.path()
 	.projection(projection);
-
-	/*var x = d3.scale.linear()
-    .domain(color.domain())
-    .rangeRound([600, 860]);*/
 	
+	var x = d3.scale.linear()
+    .domain(priceList)
+    .rangeRound([600, 860]);
+
 	var graticule = d3.geo.graticule();
 
 	var svg = d3.select("#stateMap").append("svg")
@@ -80,48 +90,10 @@ app.controller("StateMapCntrl", ["$scope", "mainService", function($scope, mainS
 	.attr("height", height);
 
 	var g = svg.append("g");
+    /*.attr("class", "key")
+    .attr("transform", "translate(0,40)");*/
+
 	
-	/*g.selectAll("rect")
-	  .data(color.range().map(function(d) {
-	      d = color.invertExtent(d);
-	      if (d[0] == null) d[0] = x.domain()[0];
-	      if (d[1] == null) d[1] = x.domain()[1];
-	      return d;
-	    }))
-	  .enter().append("rect")
-	    .attr("height", 8)
-	    .attr("x", function(d) { return x(d[0]); })
-	    .attr("width", function(d) { return x(d[1]) - x(d[0]); })
-	    .attr("fill", function(d) { return color(d[0]); });
-
-	g.append("text")
-	    .attr("class", "caption")
-	    .attr("x", x.range()[0])
-	    .attr("y", -6)
-	    .attr("fill", "#000")
-	    .attr("text-anchor", "start")
-	    .attr("font-weight", "bold")
-	    .text("Unemployment rate");
-
-	g.call(d3.axisBottom(x)
-	    .tickSize(13)
-	    .tickFormat(function(x, i) { return i ? x : x + "%"; })
-	    .tickValues(color.domain()))
-	  .select(".domain")
-	    .remove();
-
-	var places = {
-			GSFC: [-76.852587, 38.991621],
-			KSC: [-80.650813, 28.524963]
-	};
-
-	var route = {
-			type: "LineString",
-			coordinates: [
-				places.GSFC,
-				places.KSC
-				]
-	};*/
 
 //	Setup groups
 //	--------------------------------------
@@ -192,6 +164,59 @@ app.controller("StateMapCntrl", ["$scope", "mainService", function($scope, mainS
 			 }
 		 }	
 		 
+		 
+		// make legend 
+		 var legend = svg.append("g")
+		     .attr("transform", "translate ("+(width - margin.left)+","+margin.top+")")
+		     .attr("class", "legend");
+		     
+		 legend.selectAll("text")
+		     .data(title)
+		     .enter().append("text")
+		     .attr("class", "legend-title")
+		     .attr("y", function(d, i) { return (i+1)*lineheight-2; })
+		     .text(function(d){ return d; })
+
+		 var ranges = color.range().length;
+		     
+		 // make legend box 
+		 var lb = legend.append("rect")
+		     .attr("transform", "translate (0,"+titleheight+")")
+		     .attr("class", "legend-box")
+		     .attr("width", (boxwidth+5))
+		     .attr("height", ranges*lineheight+2*boxmargin+lineheight-keyheight);
+
+		 // make quantized key legend items
+		 var li = legend.append("g")
+		     .attr("transform", "translate (8,"+(titleheight+boxmargin)+")")
+		     .attr("class", "legend-items");
+
+		 li.selectAll("rect")
+		     .data(color.range().map(function(c) {
+		       var d = color.invertExtent(c);
+		       if (d[0] == null) d[0] = x.domain()[0];
+		       if (d[1] == null) d[1] = x.domain()[1];
+		       return d;
+		     }))
+		     .enter().append("rect")
+		     .attr("y", function(d, i) { return i*lineheight+lineheight-keyheight; })
+		     .attr("width", keywidth)
+		     .attr("height", keyheight)
+		     .style("fill", function(d) { return color(d[0]); });
+		     
+		 li.selectAll("text")
+		     .data(priceList)
+		     .enter().append("text")
+		     .attr("x", 48)
+		     .attr("y", function(d, i) { return (i+1)*lineheight-2; })
+		     .text(function(d, i) {
+		    	 if(i < priceList.length-1){
+		    		 legendTxt = d + '-' + priceList[i+1];
+		    		 return legendTxt;
+		    	 }
+		     });
+		 
+		 
 		 //console.log(states);
 		 
 		 stateGroup.append("g")
@@ -217,10 +242,12 @@ app.controller("StateMapCntrl", ["$scope", "mainService", function($scope, mainS
 	        return d.properties.code;
 	      })
 	      .attr("x", function(d){
-	          return path.centroid(d)[0];
+	    	  if(path.centroid(d)[0])
+	    		  return path.centroid(d)[0];
 	      })
 	      .attr("y", function(d){
-	          return  path.centroid(d)[1];
+	    	  if(path.centroid(d)[1])
+	          	return  path.centroid(d)[1];
 	      })
 	      .attr("text-anchor","middle")
 	      .attr('fill', 'white');
@@ -230,109 +257,6 @@ app.controller("StateMapCntrl", ["$scope", "mainService", function($scope, mainS
 		 .datum(topojson.mesh(us, us.objects.states, function(a, b) { return a !== b; }))
 		 .attr("id", "state-borders")
 		 .attr("d", path);
-		 
-
-	/*	d3.csv("/public/xpo/controllers/nasacenters.csv", function(error, data) {
-			// Draw images after drawing paths.
-			imageGroup.selectAll("image").data([0])
-			.data(data)
-			.enter()
-			.append("image")
-			.attr("xlink:href", "nasalogo.png")
-			.attr("width", "30")
-			.attr("height", "30")
-			.attr("x", function(d) {
-				return projection([d.lon, d.lat])[0]-15;
-			})
-			.attr("y", function(d) {
-				return projection([d.lon, d.lat])[1]-15;
-			})
-
-			// --- Helper functions (for tweening the path)
-			var lineTransition = function lineTransition(path) {
-				path.transition()
-				//NOTE: Change this number (in ms) to make lines draw faster or slower
-				.duration(5500)
-				.attrTween("stroke-dasharray", tweenDash)
-				.each("end", function(d,i) { 
-					////Uncomment following line to re-transition
-					//d3.select(this).call(transition); 
-
-					//We might want to do stuff when the line reaches the target,
-					//  like start the pulsating or add a new point or tell the
-					//  NSA to listen to this guy's phone calls
-					//doStuffWhenLineFinishes(d,i);
-				});
-			};
-			var tweenDash = function tweenDash() {
-				//This function is used to animate the dash-array property, which is a
-				//  nice hack that gives us animation along some arbitrary path (in this
-				//  case, makes it look like a line is being drawn from point A to B)
-				var len = this.getTotalLength(),
-				interpolate = d3.interpolateString("0," + len, len + "," + len);
-
-				return function(t) { return interpolate(t); };
-			};
-
-			// --- Add paths
-			// Format of object is an array of objects, each containing
-			//  a type (LineString - the path will automatically draw a greatArc)
-			//  and coordinates 
-			var links = [
-				{
-					type: "LineString",
-					coordinates: [
-						[ data[0].lon, data[0].lat ],
-						[ data[1].lon, data[1].lat ]
-						]
-				}
-				];
-
-			// you can build the links any way you want - e.g., if you have only
-			//  certain items you want to draw paths between
-			// Alterntively, it can be created automatically based on the data
-			links = [];
-			for(var i=0, len=data.length-1; i<len; i++){
-				// (note: loop until length - 1 since we're getting the next
-				//  item with i+1)
-				links.push({
-					type: "LineString",
-					coordinates: [
-						[ data[i].lon, data[i].lat ],
-						[ data[i+1].lon, data[i+1].lat ]
-						]
-				});
-			}
-
-			// Standard enter / update 
-			var pathArcs = arcGroup.selectAll(".arc")
-			.data(links);
-
-			//enter
-			pathArcs.enter()
-			.append("path").attr({
-				'class': 'arc'
-			}).style({ 
-				fill: 'none',
-			});
-
-			//update
-			pathArcs.attr({
-				//d is the points attribute for this path, we'll draw
-				//  an arc between the points using the arc function
-				d: path
-			})
-			.style({
-				stroke: '#0000ff',
-				'stroke-width': '2px'
-			})
-			// Uncomment this line to remove the transition
-			.call(lineTransition); 
-
-			//exit
-			pathArcs.exit().remove();
-
-		});*/
 
 	};
 
