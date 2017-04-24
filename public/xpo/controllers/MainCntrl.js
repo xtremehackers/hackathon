@@ -1,4 +1,4 @@
-app.controller("MainController", ['$scope', '$http', '$timeout', '$window', 'mainService', '$location', 'fileReader','cfpLoadingBar', '$rootScope','appService', function($scope, $http, $timeout, $window, mainService, $location, fileReader, cfpLoadingBar, $rootScope, appService){
+app.controller("MainController", ['$scope', '$http', '$timeout', '$window', 'mainService', '$location', 'fileReader','cfpLoadingBar', '$rootScope','appService', 'mainService', function($scope, $http, $timeout, $window, mainService, $location, fileReader, cfpLoadingBar, $rootScope, appService, mainService){
 
 
 	appService.fetchExcelData().success(function(response){
@@ -34,6 +34,7 @@ app.controller("MainController", ['$scope', '$http', '$timeout', '$window', 'mai
 	var count = 0;
 	$scope.getFile = function () {
 
+		console.log(new Date(), " file start");
 		cfpLoadingBar.start();
 //		var url1 = window.location.href.split('#!')[0] + 'resources/Master_dashboard_V3.0.csv';
 		fileReader.readAsDataUrl($scope.graphs.file, $scope) 
@@ -126,8 +127,10 @@ app.controller("MainController", ['$scope', '$http', '$timeout', '$window', 'mai
 				//$scope.graphs.setDetails();
 				$scope.graphs.isFileLoaded = true;
 				$rootScope.$broadcast('fileLoaded');
+				$scope.graphs.destination = mainService.unique(globalArray["DestinationCity"]);
 				$scope.UpdateBarChart();
 			});
+			console.log(new Date(), " file end");
 		});
 
 		cfpLoadingBar.complete();

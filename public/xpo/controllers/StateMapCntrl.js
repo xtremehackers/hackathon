@@ -13,7 +13,7 @@ app.controller("StateMapCntrl", ["$scope", "mainService", function($scope, mainS
 	
 	var margin = { "left": 150, "top": 80 };
 
-	var destination = mainService.unique(globalArray["DestinationCity"]);
+	var destination = $scope.graphs.destination;
 	var avgMarketPrice;
 	var statesList = [];
 	var stateCode = {};

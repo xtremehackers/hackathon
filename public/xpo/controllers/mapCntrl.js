@@ -8,7 +8,7 @@ app.controller("MapCntrl", ["$scope", "mainService", function($scope, mainServic
 
 	//console.log(mainService.unique(globalArray["OriginStateCode"]));
 
-	var destination = mainService.unique(globalArray["DestinationCity"]);
+	var destination = $scope.graphs.destination;
 	var avgMarketPrice;
 	var statesList = [];
 

@@ -6,13 +6,15 @@ app.service("mainService", ['$http', '$timeout', '$window', function($http, $tim
 		return 1000000;
 	}
 	
-	s.unique = function(arr) {
-		var u = {}, a = [];
+	s.unique = function(array) {
+		console.log(new Date(), " unique start");
+//		return arr;
+		/*var u = {}, a = [];
 //		arr = removeEmpty(myArr);
 		for(var i = 0, l = arr.length; i < l; ++i){
-			/*if(arr[i] == undefined){
+			if(arr[i] == undefined){
 				continue;
-			}*/
+			}
 			arr[i] = arr[i].toLowerCase();
 			if(arr[i].trim() != "" || arr[i] != null || arr[i] != undefined){
 				if(!u.hasOwnProperty(arr[i])) {
@@ -23,16 +25,24 @@ app.service("mainService", ['$http', '$timeout', '$window', function($http, $tim
 				console.log(arr[i]);
 			}
 		}
-		return a;
+		return a;*/
+		
+		var result = [];
+		  for(var x = 0; x < array.length; x++){
+		  if(result.indexOf(array[x]) == -1)
+		        result.push(array[x]);
+		  }
+		  console.log(new Date(), " unique end");
+		  return result;
 	}
 	
 	removeEmpty = function(arr){
-		for(i = 0; i < arr.length; i++){
+		/*for(i = 0; i < arr.length; i++){
 			if(arr[i] == '' || arr[i] == null || arr[i] == undefined){
 				arr.splice(arr.indexOf(arr[i]), 1);
 			}
 		}
-		return arr;
+		return arr;*/
 	}
 	
 	s.drawLegend = function(svg, colors, main_width, extraWidth, legendStartPosition){
