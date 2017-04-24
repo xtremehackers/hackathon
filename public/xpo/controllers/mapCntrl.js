@@ -218,8 +218,8 @@ app.controller("MapCntrl", ["$scope", "mainService", function($scope, mainServic
 				return projection([d.targetLocation[0], d.targetLocation[1]])[1];
 			}
 		})
-		.attr("r", 2)
-		.style("fill", "red")
+		.attr("r", 5)
+		.style("fill", "orange")
 		.style("opacity", 1)
 		.on("mousemove", function(d){
        	 tooltip
@@ -302,7 +302,7 @@ app.controller("MapCntrl", ["$scope", "mainService", function($scope, mainServic
 			d: path
 		})
 		.style({
-			stroke: '#0000ff',
+			stroke: 'white',
 			'stroke-width': '2px'
 		})
 		// Uncomment this line to remove the transition
