@@ -67,10 +67,10 @@ app.controller("MainController", ['$scope', '$http', '$timeout', '$window', 'mai
 						}
 					}else{
 						count++;
-						console.log("this", i, data);
+//						console.log("this", i, data);
 					}
 				}
-				console.log(globalArray, count);
+//				console.log(globalArray, count);
 
 				for(var i=1; i< globalArray.OrderId.length; i++)
 				{
@@ -227,6 +227,10 @@ app.controller("MainController", ['$scope', '$http', '$timeout', '$window', 'mai
 	}
 
 
+	/*$scope.updateMap = function(obj){
+		console.log(obj);
+	}*/	
+	
 
 	$scope.UpdateBarChart = function (obj) {
 		var value = parseInt($('select :selected').val());
