@@ -186,7 +186,7 @@ app.controller("MapCntrl", ["$scope", "mainService", function($scope, mainServic
 
 	drawArcs = function(pathList){
 		svg.selectAll("circle").remove();
-		console.log(pathList);
+
 		svg.selectAll("circle")
 		.data(pathList)
 		.enter()
@@ -225,11 +225,12 @@ app.controller("MapCntrl", ["$scope", "mainService", function($scope, mainServic
        	 tooltip.style("display", "none");
        });
 		
+		
 		// --- Helper functions (for tweening the path)
 		var lineTransition = function lineTransition(path) {
 			path.transition()
 			//NOTE: Change this number (in ms) to make lines draw faster or slower
-			.duration(5500)
+			.duration(2500)
 			.attrTween("stroke-dasharray", tweenDash)
 			.each("end", function(d,i) { 
 
