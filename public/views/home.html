@@ -43,10 +43,15 @@
 				
 					<div class="panel panel-primary">
 						<div class="panel-heading">
-	
+							
 							<i class="zmdi zmdi-trending-up"></i> Scattered City Markers
 						</div>
 						<div class="panel-body">
+							<div ng-if="isSourceSelected">
+								<p>CITY: {{selectedOriginCity.toUpperCase()}}
+								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TOTAL ORDERS: {{count/2}}
+								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TOTAL TRANSPORTATION COST INCURRED: {{totalTransportationCost | currency}}</p>
+							</div>
 							<div id="maps"></div>
 						</div>
 					</div>

@@ -17,6 +17,7 @@ app.controller("MainController", ['$scope', '$http', '$timeout', '$window', 'mai
 	$scope.graphs.programsClicked = false;
 	$scope.graphs.homeClicked = true;
 	$scope.graphs.isFileLoaded = false;
+	$scope.graphs.count = 0;
 
 	$scope.graphs.items = [];
 

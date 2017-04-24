@@ -2,6 +2,7 @@ app.controller("MapCntrl", ["$scope", "mainService", function($scope, mainServic
 	var width = 1000,
 	height = 600,
 	centered;
+	$scope.isSourceSelected = false;
 
 	var tooltipText = '<h4> City: %heading </h4><p> Market Avg Rate(Per Mile): %val1</p><p> XPO Rate(Per Mile): %val2</p>';
 
@@ -22,10 +23,10 @@ app.controller("MapCntrl", ["$scope", "mainService", function($scope, mainServic
 
 	destination.shift();
 
+	var count = 0;
 	for(h = 1; h < destination.length; h++){
 		avgMarketPrice = 0;
 		xpoCost = 0;
-		count = 0;
 		for(k=1; k < globalArray["DestinationCity"].length; k++){
 			if((globalArray["DestinationCity"])[k] == destination[h]){
 				latitude = globalArray["DestinationLatitude"][k];
@@ -47,23 +48,29 @@ app.controller("MapCntrl", ["$scope", "mainService", function($scope, mainServic
     .domain(d3.range(2, 10))
     .range(d3.schemeBlues[9]);*/
 
+	$scope.count = 0;
 	$scope.updateMap = function(){
 
-		console.log($scope.selectedOriginCity);
+//		console.log($scope.selectedOriginCity);
 		var pathList = [];
 
+		$scope.count = 0;
+		$scope.totalTransportationCost = 0;
 		for(var i=1; i< globalArray.OrderId.length; i++) {
 			if($scope.selectedOriginCity == globalArray.OriginCity[i]){
+				$scope.count++;
+				$scope.totalTransportationCost += parseFloat(globalArray.OurTransportationCost[i]);
 				pathList.push({
 					sourceLocation: [globalArray.OriginLongitude[i], globalArray.OriginLatitude[i]],
 					targetLocation: [globalArray.DestinationLongitude[i], globalArray.DestinationLatitude[i]],
 					destinationCity: globalArray.DestinationCity[i],
 					xpoRate: globalArray.OurRatePerMile[i],
-					marketRate: globalArray.MarketAvgPricePerMile[i]
+					marketRate: globalArray.MarketAvgPricePerMile[i],
 				});
 			}
 		}
 		drawArcs(pathList);
+		$scope.isSourceSelected = true;
 	}
 
 	var states = {};
@@ -310,8 +317,6 @@ app.controller("MapCntrl", ["$scope", "mainService", function($scope, mainServic
 			str = str.replace("%heading", object.destinationCity.toUpperCase());
 			str = str.replace("%val1", object.marketRate);
 			str = str.replace("%val2", object.xpoRate);
-			//str = "City :  " + object['city']  + "\nCount : " + object['orderCount'];
-			console.log(str);
 			return str;
 		}
 	}
