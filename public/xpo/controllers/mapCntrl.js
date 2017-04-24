@@ -302,7 +302,7 @@ app.controller("MapCntrl", ["$scope", "mainService", function($scope, mainServic
 			d: path
 		})
 		.style({
-			stroke: 'white',
+			stroke: 'red',
 			'stroke-width': '2px'
 		})
 		// Uncomment this line to remove the transition

@@ -68,7 +68,7 @@ app.controller("StateMapCntrl", ["$scope", "mainService", function($scope, mainS
              floorAvgPrice(d3.max(statesList, function(d) { return d.value; }))
      ])*/
 	.domain(priceList)
-    .range(["#000000", "#380000", "#580000", "#780000", "#980000", "#980000", "#B80000", "#D80000", "#F80000"]);
+    .range(["#F80000", "#D80000", "#B80000", "#980000", "#980000", "#780000", "#580000", "#380000","#000000" ]);
 	//console.log(color.domain());
 	var states = {};
 	
