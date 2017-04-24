@@ -3,14 +3,14 @@ app.controller("MapCntrl", ["$scope", "mainService", function($scope, mainServic
 	height = 600,
 	centered;
 
-	var tooltipText = '<h4> City: %heading </h4><p> Order Count: %val1</p>';
-	
+	var tooltipText = '<h4> City: %heading </h4><p> Market Avg Rate(Per Mile): %val1</p><p> XPO Rate(Per Mile): %val2</p>';
+
 	//console.log(mainService.unique(globalArray["OriginStateCode"]));
-	
+
 	var destination = mainService.unique(globalArray["DestinationCity"]);
 	var avgMarketPrice;
 	var statesList = [];
-	
+
 	var arcdata = [];
 	for(var i=1; i< globalArray.OrderId.length; i++) {
 		arcdata.push({
@@ -19,9 +19,9 @@ app.controller("MapCntrl", ["$scope", "mainService", function($scope, mainServic
 			sourceCity: globalArray.OriginCity[i]
 		});
 	}
-	
+
 	destination.shift();
-	
+
 	for(h = 1; h < destination.length; h++){
 		avgMarketPrice = 0;
 		xpoCost = 0;
@@ -37,35 +37,37 @@ app.controller("MapCntrl", ["$scope", "mainService", function($scope, mainServic
 		}
 		statesList.push({'city':destination[h], 'value':avgMarketPrice/count, 'lat':latitude, 'lon':longitude, 'orderCount':count, 'profit':(avgMarketPrice-xpoCost)});
 	}
-	
+
 	//console.log(statesList);
-	
-	
+
+
 	var color = d3.scale.category20();
-	
+
 	/*var color = d3.scaleThreshold()
     .domain(d3.range(2, 10))
     .range(d3.schemeBlues[9]);*/
-	
+
 	$scope.updateMap = function(){
-		
+
 		console.log($scope.selectedOriginCity);
 		var pathList = [];
-		
+
 		for(var i=1; i< globalArray.OrderId.length; i++) {
 			if($scope.selectedOriginCity == globalArray.OriginCity[i]){
 				pathList.push({
 					sourceLocation: [globalArray.OriginLongitude[i], globalArray.OriginLatitude[i]],
 					targetLocation: [globalArray.DestinationLongitude[i], globalArray.DestinationLatitude[i]],
-					destinationCity: globalArray.DestinationCity[i]
+					destinationCity: globalArray.DestinationCity[i],
+					xpoRate: globalArray.OurRatePerMile[i],
+					marketRate: globalArray.MarketAvgPricePerMile[i]
 				});
 			}
 		}
 		drawArcs(pathList);
 	}
-	
+
 	var states = {};
-	
+
 	var projection = d3.geo.albersUsa()
 	.scale(1070)
 	.translate([width / 2, height / 2]);
@@ -75,14 +77,14 @@ app.controller("MapCntrl", ["$scope", "mainService", function($scope, mainServic
 
 	var graticule = d3.geo.graticule();
 
-	
+
 	var svg = d3.select("#maps").append("svg")
 	.attr("width", width)
 	.attr("height", height);
 
 	var tooltip = d3.select("#maps").append("div").attr("class",
 	"toolTip");
-	
+
 	var g = svg.append("g");
 
 	var places = {
@@ -108,117 +110,111 @@ app.controller("MapCntrl", ["$scope", "mainService", function($scope, mainServic
 	var pointGroup = g.append('g');
 
 	queue()
-    .defer(d3.json, "xpo/controllers/us.json")
-    .defer(d3.json, "xpo/controllers/usStates.json")
-    .await(ready);
-	
-		// draw states
-	
+	.defer(d3.json, "xpo/controllers/us.json")
+	.defer(d3.json, "xpo/controllers/usStates.json")
+	.await(ready);
+
+	// draw states
+
 	function ready(error, us, states){
-		 var countries = topojson.feature(us, us.objects.states).features,
-         neighbors = topojson.neighbors(us.objects.states.geometries);
+		var countries = topojson.feature(us, us.objects.states).features,
+		neighbors = topojson.neighbors(us.objects.states.geometries);
 
-		 for (var i = 0; i < statesList.length; i++) {
-			 //Grab state name
-			 var dataState = statesList[i].city;
+		for (var i = 0; i < statesList.length; i++) {
+			//Grab state name
+			var dataState = statesList[i].city;
 
-			 //Grab data value, and convert from string to float
-			 var dataValue = parseFloat(statesList[i].value);
+			//Grab data value, and convert from string to float
+			var dataValue = parseFloat(statesList[i].value);
 
-			 //Find the corresponding state inside the GeoJSON
-			 for (var j = 0; j < states.features.length; j++) {
+			//Find the corresponding state inside the GeoJSON
+			for (var j = 0; j < states.features.length; j++) {
 
-				 var jsonState = states.features[j].properties.name;
+				var jsonState = states.features[j].properties.name;
 
-				 if (dataState.toLowerCase() == jsonState.toLowerCase()) {
+				if (dataState.toLowerCase() == jsonState.toLowerCase()) {
 
-					 //Copy the data value into the JSON
-					 states.features[j].properties.value = dataValue;
+					//Copy the data value into the JSON
+					states.features[j].properties.value = dataValue;
 
-					 //Stop looking through the JSON
-					 break;
+					//Stop looking through the JSON
+					break;
 
-				 }else{
-					 states.features[j].properties.value = 0;
-					 break;
-				 }
-			 }
-		 }	
-		 
-		 //console.log(states);
-		 
-		 stateGroup.append("g")
-		 .attr("id", "states")
-		 .selectAll("path")
-		 .data(states.features)
-		 .enter().append("path")
-		 .attr("d", path)
-		 .style("fill", function(d, i) { return color(d.color = d3.max(states.features[i], function(n) { return states.features[n].properties.value; }) + 1 | 0); })
-		 
-		 stateGroup.append("g")
-	      .attr("class", "states-names")
-	      .selectAll("text")
-	      .data(states.features)
-	      .enter()
-	      .append("svg:text")
-	      .text(function(d){
-	        return d.properties.code;
-	      })
-	      .attr("x", function(d){
-	    	  if(path.centroid(d)[0])
-	    		  return path.centroid(d)[0];
-	      })
-	      .attr("y", function(d){
-	    	  if(path.centroid(d)[1])
-	          	return  path.centroid(d)[1];
-	      })
-	      .attr("text-anchor","middle")
-	      .attr('fill', 'white');
-		 
-		 stateGroup.append("path")
-		 .datum(topojson.mesh(us, us.objects.states, function(a, b) { return a !== b; }))
-		 .attr("id", "state-borders")
-		 .attr("d", path);
-		 
-		 
-		 
-		 
-         
-		 /*prepareTooltip = function(object){
-			 console.log(object);
-			 var str = tooltipText;
-				str = str.replace("%heading", object['city'].toUpperCase());
-				str = str.replace("%val1", object['orderCount']);
-				//str = "City :  " + object['city']  + "\nCount : " + object['orderCount'];
-				return str;
-			}*/
+				}else{
+					states.features[j].properties.value = 0;
+					break;
+				}
+			}
+		}	
 
-//		 drawArcs();
+		//console.log(states);
+
+		stateGroup.append("g")
+		.attr("id", "states")
+		.selectAll("path")
+		.data(states.features)
+		.enter().append("path")
+		.attr("d", path)
+		.style("fill", function(d, i) { return color(d.color = d3.max(states.features[i], function(n) { return states.features[n].properties.value; }) + 1 | 0); })
+
+		stateGroup.append("g")
+		.attr("class", "states-names")
+		.selectAll("text")
+		.data(states.features)
+		.enter()
+		.append("svg:text")
+		.text(function(d){
+			return d.properties.code;
+		})
+		.attr("x", function(d){
+			if(path.centroid(d)[0])
+				return path.centroid(d)[0];
+		})
+		.attr("y", function(d){
+			if(path.centroid(d)[1])
+				return  path.centroid(d)[1];
+		})
+		.attr("text-anchor","middle")
+		.attr('fill', 'white');
+
+		stateGroup.append("path")
+		.datum(topojson.mesh(us, us.objects.states, function(a, b) { return a !== b; }))
+		.attr("id", "state-borders")
+		.attr("d", path);
 
 	};
-	
+
 	drawArcs = function(pathList){
+		svg.selectAll("circle").remove();
 		console.log(pathList);
 		svg.selectAll("circle")
-        .data(pathList)
-        .enter()
-        .append("circle")
-        .attr("cx", function(d, i) {
-       	 if(projection([d.sourceLocation[0], d.sourceLocation[1]]))
-                return projection([d.sourceLocation[0], d.sourceLocation[1]])[0];
-       	 if(projection([d.targetLocation[0], d.targetLocation[1]]))
-       		 return projection([d.targetLocation[0], d.targetLocation[1]])[0];
-        })
-        .attr("cy", function(d, i) {
-       	 if(projection([d.sourceLocation[0], d.sourceLocation[1]]))
-                return projection([d.sourceLocation[0], d.sourceLocation[1]])[1];
-       	 if(projection([d.targetLocation[0], d.targetLocation[1]]))
-       		 return projection([d.targetLocation[0], d.targetLocation[1]])[1];
-        })
-        .attr("r", 2)
-        .style("fill", "red")
-        .style("opacity", 1)
-        /*.on("mousemove", function(d){
+		.data(pathList)
+		.enter()
+		.append("circle")
+		.attr("cx", function(d, i) {
+			if(projection([d.sourceLocation[0], d.sourceLocation[1]]) && i == 0){
+				return projection([d.sourceLocation[0], d.sourceLocation[1]])[0];
+			}
+		})
+		.attr("cy", function(d, i) {
+			if(projection([d.sourceLocation[0], d.sourceLocation[1]]) && i == 0){
+				return projection([d.sourceLocation[0], d.sourceLocation[1]])[1];
+			}
+		})
+		.attr("cx", function(d, i) {
+			if(projection([d.targetLocation[0], d.targetLocation[1]])){
+				return projection([d.targetLocation[0], d.targetLocation[1]])[0];
+			}
+		})
+		.attr("cy", function(d, i) {
+			if(projection([d.targetLocation[0], d.targetLocation[1]])){
+				return projection([d.targetLocation[0], d.targetLocation[1]])[1];
+			}
+		})
+		.attr("r", 2)
+		.style("fill", "red")
+		.style("opacity", 1)
+		.on("mousemove", function(d){
        	 tooltip
 	         .html(prepareTooltip(d))
 	         .style("left", (d3.event.pageX - 34) + "px")
@@ -227,7 +223,7 @@ app.controller("MapCntrl", ["$scope", "mainService", function($scope, mainServic
         })
         .on("mouseout", function(d){
        	 tooltip.style("display", "none");
-       })*/;
+       });
 		
 		// --- Helper functions (for tweening the path)
 		var lineTransition = function lineTransition(path) {
@@ -236,7 +232,7 @@ app.controller("MapCntrl", ["$scope", "mainService", function($scope, mainServic
 			.duration(5500)
 			.attrTween("stroke-dasharray", tweenDash)
 			.each("end", function(d,i) { 
-				
+
 			});
 		};
 		var tweenDash = function tweenDash() {
@@ -306,6 +302,17 @@ app.controller("MapCntrl", ["$scope", "mainService", function($scope, mainServic
 
 		//exit
 		pathArcs.exit().remove();
+		
+		prepareTooltip = function(object){
+//		 console.log(object);
+		 var str = tooltipText;
+			str = str.replace("%heading", object.destinationCity.toUpperCase());
+			str = str.replace("%val1", object.marketRate);
+			str = str.replace("%val2", object.xpoRate);
+			//str = "City :  " + object['city']  + "\nCount : " + object['orderCount'];
+			console.log(str);
+			return str;
+		}
 	}
 
 }]);
