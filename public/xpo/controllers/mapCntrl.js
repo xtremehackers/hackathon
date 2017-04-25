@@ -4,7 +4,7 @@ app.controller("MapCntrl", ["$scope", "mainService", function($scope, mainServic
 	centered;
 	$scope.isSourceSelected = false;
 
-	var tooltipText = '<h4> City: %heading </h4><p> Market Avg Rate(Per Mile): %val1</p><p> XPO Rate(Per Mile): %val2</p>';
+	var tooltipText = '<h4> City: %heading </h4><p> Market Avg Rate(Per Mile): %val1</p><p> XPO Rate(Per Mile): %val2</p><p> No of Orders: %val3</p>';
 
 	//console.log(mainService.unique(globalArray["OriginStateCode"]));
 
@@ -55,6 +55,7 @@ app.controller("MapCntrl", ["$scope", "mainService", function($scope, mainServic
     .range(d3.schemeBlues[9]);*/
 
 	$scope.count = 0;
+	order = {};
 	$scope.updateMap = function(){
 
 //		console.log($scope.selectedOriginCity);
@@ -66,6 +67,21 @@ app.controller("MapCntrl", ["$scope", "mainService", function($scope, mainServic
 			if($scope.selectedOriginCity == dataArray[i].OriginCity){
 				$scope.count++;
 				$scope.totalTransportationCost += parseFloat(dataArray[i].OurTransportationCost);
+				
+				isCityPreset = false;
+				for (var key in order){
+					if(key == dataArray[i].DestinationCity.toLowerCase()){
+						isCityPreset = true;
+						break;
+					}
+				}
+				
+				if(!isCityPreset){
+					order[dataArray[i].DestinationCity.toLowerCase()] = 1;
+				}else{
+					order[dataArray[i].DestinationCity.toLowerCase()] = order[dataArray[i].DestinationCity.toLowerCase()] + 1;
+				}
+				
 				pathList.push({
 					sourceLocation: [dataArray[i].OriginLongitude, dataArray[i].OriginLatitude],
 					targetLocation: [dataArray[i].DestinationLongitude, dataArray[i].DestinationLatitude],
@@ -323,6 +339,7 @@ app.controller("MapCntrl", ["$scope", "mainService", function($scope, mainServic
 			str = str.replace("%heading", object.destinationCity.toUpperCase());
 			str = str.replace("%val1", object.marketRate);
 			str = str.replace("%val2", object.xpoRate);
+			str = str.replace("%val3", order[object.destinationCity.toLowerCase()]/2);
 			return str;
 		}
 	}
