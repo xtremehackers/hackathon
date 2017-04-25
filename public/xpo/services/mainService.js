@@ -167,4 +167,8 @@ app.service("mainService", ['$http', '$timeout', '$window', function($http, $tim
 		     } 
 		}
 	
+	s.unpack = function(rows, key) {
+        return rows.map(function(row) { return row[key]; });
+	}
+	
 }]);

@@ -22,12 +22,12 @@ app.controller("StateMapCntrl", ["$scope", "mainService", function($scope, mainS
 	for(h = 1; h < destination.length; h++){
 		avgMarketPrice = 0;
 		count = 0;
-		for(k=1; k < globalArray["DestinationCity"].length; k++){
-			if((globalArray["DestinationCity"])[k] == destination[h]){
-				latitude = globalArray["DestinationLatitude"][k];
-				longitude = globalArray["DestinationLongitude"][k];
-				destinationCode = globalArray["DestinationStateCode"][k];
-				avgMarketPrice += parseFloat(globalArray["OurTransportationCost"][k]);
+		for(k=1; k < dataArray.length; k++){
+			if(dataArray[k].DestinationCity == destination[h]){
+				latitude = dataArray[k].DestinationLatitude;
+				longitude = dataArray[k].DestinationLongitude;
+				avgMarketPrice += parseFloat(dataArray[k].OurTransportationCost);
+				destinationCode = dataArray[k].DestinationStateCode;
 				count++;
 			}
 		}

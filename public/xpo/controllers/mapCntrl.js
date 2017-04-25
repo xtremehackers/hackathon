@@ -13,13 +13,13 @@ app.controller("MapCntrl", ["$scope", "mainService", function($scope, mainServic
 	var statesList = [];
 
 	var arcdata = [];
-	for(var i=1; i< globalArray.OrderId.length; i++) {
+	/*for(var i=1; i< globalArray.OrderId.length; i++) {
 		arcdata.push({
 			sourceLocation: [globalArray.OriginLongitude[i], globalArray.OriginLatitude[i]],
 			targetLocation: [globalArray.DestinationLongitude[i], globalArray.DestinationLatitude[i]],
 			sourceCity: globalArray.OriginCity[i]
 		});
-	}
+	}*/
 
 	destination.shift();
 
@@ -27,14 +27,20 @@ app.controller("MapCntrl", ["$scope", "mainService", function($scope, mainServic
 	for(h = 1; h < destination.length; h++){
 		avgMarketPrice = 0;
 		xpoCost = 0;
-		for(k=1; k < globalArray["DestinationCity"].length; k++){
-			if((globalArray["DestinationCity"])[k] == destination[h]){
-				latitude = globalArray["DestinationLatitude"][k];
-				longitude = globalArray["DestinationLongitude"][k];
-				avgMarketPrice += parseFloat(globalArray["MarketAvgPrice"][k]);
-				xpoCost += parseFloat(globalArray["OurTransportationCost"][k]);
+		for(k=1; k < dataArray.length; k++){
+			if(dataArray[k].DestinationCity == destination[h]){
+				latitude = dataArray[k].DestinationLatitude;
+				longitude = dataArray[k].DestinationLongitude;
+				avgMarketPrice += parseFloat(dataArray[k].MarketAvgPrice);
+				xpoCost += parseFloat(dataArray[k].OurTransportationCost);
 				count++;
 			}
+			if(arcdata.length != dataArray.length)
+				arcdata.push({
+					sourceLocation: [dataArray[k].OriginLongitude, dataArray[k].OriginLatitude],
+					targetLocation: [dataArray[k].DestinationLongitude, dataArray[k].DestinationLatitude],
+					sourceCity: dataArray[k].OriginCity
+				});
 		}
 		statesList.push({'city':destination[h], 'value':avgMarketPrice/count, 'lat':latitude, 'lon':longitude, 'orderCount':count, 'profit':(avgMarketPrice-xpoCost)});
 	}
@@ -56,16 +62,16 @@ app.controller("MapCntrl", ["$scope", "mainService", function($scope, mainServic
 
 		$scope.count = 0;
 		$scope.totalTransportationCost = 0;
-		for(var i=1; i< globalArray.OrderId.length; i++) {
-			if($scope.selectedOriginCity == globalArray.OriginCity[i]){
+		for(var i=1; i< dataArray.length; i++) {
+			if($scope.selectedOriginCity == dataArray[i].OriginCity){
 				$scope.count++;
-				$scope.totalTransportationCost += parseFloat(globalArray.OurTransportationCost[i]);
+				$scope.totalTransportationCost += parseFloat(dataArray[i].OurTransportationCost);
 				pathList.push({
-					sourceLocation: [globalArray.OriginLongitude[i], globalArray.OriginLatitude[i]],
-					targetLocation: [globalArray.DestinationLongitude[i], globalArray.DestinationLatitude[i]],
-					destinationCity: globalArray.DestinationCity[i],
-					xpoRate: globalArray.OurRatePerMile[i],
-					marketRate: globalArray.MarketAvgPricePerMile[i],
+					sourceLocation: [dataArray[i].OriginLongitude, dataArray[i].OriginLatitude],
+					targetLocation: [dataArray[i].DestinationLongitude, dataArray[i].DestinationLatitude],
+					destinationCity: dataArray[i].DestinationCity,
+					xpoRate: dataArray[i].OurRatePerMile,
+					marketRate: dataArray[i].MarketAvgPricePerMile,
 				});
 			}
 		}

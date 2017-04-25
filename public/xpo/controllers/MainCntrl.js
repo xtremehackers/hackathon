@@ -127,7 +127,7 @@ app.controller("MainController", ['$scope', '$http', '$timeout', '$window', 'mai
 				//$scope.graphs.setDetails();
 				$scope.graphs.isFileLoaded = true;
 				$rootScope.$broadcast('fileLoaded');
-				$scope.graphs.destination = mainService.unique(globalArray["DestinationCity"]);
+				$scope.graphs.destination = mainService.unique(mainService.unpack(dataArray, "DestinationCity"));
 				$scope.UpdateBarChart();
 			});
 			console.log(new Date(), " file end");
