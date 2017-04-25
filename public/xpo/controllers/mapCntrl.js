@@ -93,7 +93,7 @@ app.controller("MapCntrl", ["$scope", "mainService","growlService", function($sc
 		}
 		drawArcs(pathList);
 		$scope.isSourceSelected = true;
-		growlService.growl($scope.selectedOriginCity+" Activated !", 'inverse')
+		growlService.growlMsg("City: "+$scope.selectedOriginCity+" Selected !", 'success')
 	}
 
 	var states = {};
