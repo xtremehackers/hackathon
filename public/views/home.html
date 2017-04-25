@@ -29,16 +29,20 @@
 
 
 			<div ng-if="graphs.isFileLoaded">
+			
+				<div class="panel panel-primary">
+					<div class="panel-heading">
+
+						<i class="zmdi zmdi-trending-up"></i> Scattered City Markers
+					</div>
+					<div class="panel-body">
+						<div id="volumeMaps" ng-controller="OrderVolumeMapCntrl"></div>
+					</div>
+				</div>
+				
+				<br /><br />
+			
 				<div style="text-align: center;" ng-controller="MapCntrl">
-					<p>Origin City</p>
-					<!-- <select
-						ng-options="item.id as item.cityName for item in originCities"
-						ng-model="selectedOriginCity" ng-change="UpdateBarChart(this)"></select> -->
-						<select ng-model="selectedOriginCity" ng-change="updateMap(this)">
-							<option ng-repeat="item in originCities | orderBy:'cityName'" value="{{item.cityName}}">
-								{{item.cityName}}
-							</option>
-						</select>
 				
 				
 					<div class="panel panel-primary">
@@ -47,6 +51,15 @@
 							<i class="zmdi zmdi-trending-up"></i> Scattered City Markers
 						</div>
 						<div class="panel-body">
+							<p>Origin City</p>
+							<!-- <select
+								ng-options="item.id as item.cityName for item in originCities"
+								ng-model="selectedOriginCity" ng-change="UpdateBarChart(this)"></select> -->
+								<select ng-model="selectedOriginCity" ng-change="updateMap(this)">
+									<option ng-repeat="item in originCities | orderBy:'cityName'" value="{{item.cityName}}">
+										{{item.cityName}}
+									</option>
+								</select>
 							<div ng-if="isSourceSelected">
 								<p>CITY: {{selectedOriginCity.toUpperCase()}}
 								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TOTAL ORDERS: {{count/2}}

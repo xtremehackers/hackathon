@@ -94,7 +94,7 @@ app.controller("MapCntrl", ["$scope", "mainService", function($scope, mainServic
 
 	var g = svg.append("g");
 
-	var places = {
+	/*var places = {
 			GSFC: [-76.852587, 38.991621],
 			KSC: [-80.650813, 28.524963]
 	};
@@ -105,7 +105,7 @@ app.controller("MapCntrl", ["$scope", "mainService", function($scope, mainServic
 				places.GSFC,
 				places.KSC
 				]
-	};
+	};*/
 
 //	Setup groups
 //	--------------------------------------
