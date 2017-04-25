@@ -447,7 +447,7 @@ app.controller("MainController", ['$scope', '$http', '$timeout', '$window', 'mai
 		var chart = c3.generate({
 			bindto: d3.select("#modelCostBar"),
 			padding: {
-				bottom: 75
+				bottom: 30
 			},
 			data: {
 				columns: [
@@ -475,11 +475,26 @@ app.controller("MainController", ['$scope', '$http', '$timeout', '$window', 'mai
 						culling: {
 							max: 1
 						}
-					}
+					},
+					height: 30,
+					extent: [0,20]
 				}
 			},
 			zoom: {
 				enabled: true
+			},subchart:{ 
+				show: true, 
+				size: {
+					height: 40 
+				}, 
+				onbrush: function (domain) {
+					console.log(domain); 
+				},
+				axis: {
+					x:{
+						show:false
+					}
+				}
 			},
 			color: {
 				pattern: chartColorArray
