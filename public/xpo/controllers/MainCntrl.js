@@ -278,9 +278,7 @@ app.controller("MainController", ['$scope', '$http', '$timeout', '$window', 'mai
 			},
 			data: {
 				columns: [
-				          tempArrayMarketMin,
-				          tempArrayMarketMax,
-				          tempArrayAvg
+				          tempArrayMarketMin
 				          ],
 				          type: 'bar'
 			},
@@ -327,6 +325,19 @@ app.controller("MainController", ['$scope', '$http', '$timeout', '$window', 'mai
 				pattern: chartColorArray
 			}
 		});
+		
+		setTimeout(function () {
+		    chart.load({
+		        columns: [tempArrayMarketMax]
+		    });
+		}, 1500);
+		
+		setTimeout(function () {
+		    chart.load({
+		        columns: [tempArrayAvg]
+		    });
+		}, 3000);
+		
 		$scope.GetOrder();
 		$scope.UpdateCostBarChart();
 		$scope.XPOProfitPerMile();
@@ -341,7 +352,12 @@ app.controller("MainController", ['$scope', '$http', '$timeout', '$window', 'mai
 
 		//$scope.maxFrequentCities = new Array();
 
+		$scope.generateDestinationStatics(tempDestinationArray);
+		$scope.generateGaugeChart();
 
+	}
+	
+	$scope.generateDestinationStatics = function(tempDestinationArray){
 		$scope.mostFrequentDestination = $scope.mostFrequent(tempDestinationArray);
 
 		$scope.leastFrequentDestination = $scope.leastFrequent(tempDestinationArray);
@@ -354,8 +370,6 @@ app.controller("MainController", ['$scope', '$http', '$timeout', '$window', 'mai
 					$scope.isNutralFrequency = true;
 			}
 		}
-
-
 	}
 
 
@@ -452,12 +466,9 @@ app.controller("MainController", ['$scope', '$http', '$timeout', '$window', 'mai
 			},
 			data: {
 				columns: [
-				          tempArrayXPOCost,
-				          tempArrayMarketMin,
-				          tempArrayMarketMax,
-				          tempArrayMarketAvg
+				          tempArrayXPOCost
 				          ],
-				          type: 'bar'
+				          type: 'area-spline'
 			},
 			bar: {
 				width: {
@@ -501,6 +512,24 @@ app.controller("MainController", ['$scope', '$http', '$timeout', '$window', 'mai
 				pattern: chartColorArray
 			}
 		});
+		
+		setTimeout(function () {
+		    chart.load({
+		        columns: [tempArrayMarketAvg]
+		    });
+		}, 1500);
+		
+		setTimeout(function () {
+		    chart.load({
+		        columns: [tempArrayMarketMax]
+		    });
+		}, 3000);
+		
+		setTimeout(function () {
+		    chart.load({
+		        columns: [tempArrayMarketMin]
+		    });
+		}, 4500);
 	}
 
 
@@ -745,9 +774,7 @@ app.controller("MainController", ['$scope', '$http', '$timeout', '$window', 'mai
 	        },
 	        data: {
 	            columns: [
-				          tempArrayXPOCost,
-				          tempArrayXPOPrice,
-				          tempArrayProfit
+				          tempArrayXPOCost
 	            ],
 	            type: 'bar'
 	        },
@@ -809,11 +836,76 @@ app.controller("MainController", ['$scope', '$http', '$timeout', '$window', 'mai
 	            pattern: chartColorArray
 	        }
 	    });
+	    
+	    setTimeout(function () {
+		    chart.load({
+		        columns: [tempArrayXPOPrice]
+		    });
+		}, 1500);
+		
+		setTimeout(function () {
+		    chart.load({
+		        columns: [tempArrayProfit]
+		    });
+		}, 3000);
+		
 	}
 
 	$scope.GetFixedValue = function (value) {
 	    if(value != undefined && !isNaN(parseInt(value))){
 	        return value.toFixed(2);
 	    }
+	}
+	
+	$scope.generateGaugeChart = function(){
+		var value = parseInt($('select :selected').val());
+	    if (value == null || value == undefined || isNaN(value))
+	        value = $scope.selectedOriginCity;
+	    
+	    var tempArrayProfit = new Array();
+	    //tempArrayProfit.push("Profit value");
+
+	    var tempCityArray = new Array();
+	    var chartToolTipArray = new Array();
+	    for (var i = 0; i < dataArray.length; i++) {
+	        if ($scope.originCities[value].cityName == dataArray[i].OriginCity) {
+	            tempArrayProfit.push(dataArray[i].OurPricePerMile - dataArray[i].OurRatePerMile);
+	        }
+	    }
+	    
+	    var overAllPercentage = tempArrayProfit.reduce((a, b) => a + b, 0);
+	    
+	    c3.generate({
+	    	bindto: d3.select("#modelGaugeChart"),
+	        data: {
+	            columns: [
+	                ['Overall Profit', overAllPercentage.toFixed(2)]
+	            ],
+	            type: 'gauge'
+	        },
+	        gauge: {
+	            label: {
+	                format: function(value, ratio) {
+	                    return value;
+	                },
+	                show: false
+	            },
+		        min: 0,
+		        max: 100,
+		        units: ' %',
+		        width: 80 // for adjusting arc thickness
+	        },
+	        color: {
+	            pattern: ['#FF0000', '#F97600', '#F6C600', '#60B044'], // the three color levels for the percentage values.
+	            threshold: {
+//	                unit: 'value', // percentage is default
+//	                max: 200, // 100 is default
+	                values: [3, 5, 10, 15]
+	            }
+	        },
+	        size: {
+	            height: 180
+	        }
+	    });
 	}
 }]);
