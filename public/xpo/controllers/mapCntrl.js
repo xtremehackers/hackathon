@@ -1,4 +1,4 @@
-app.controller("MapCntrl", ["$scope", "mainService", function($scope, mainService){
+app.controller("MapCntrl", ["$scope", "mainService","growlService", function($scope, mainService, growlService){
 	var width = 1000,
 	height = 600,
 	centered;
@@ -93,6 +93,7 @@ app.controller("MapCntrl", ["$scope", "mainService", function($scope, mainServic
 		}
 		drawArcs(pathList);
 		$scope.isSourceSelected = true;
+		growlService.growl($scope.selectedOriginCity+" Activated !", 'inverse')
 	}
 
 	var states = {};

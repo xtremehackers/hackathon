@@ -116,7 +116,8 @@ app.controller("MainController", ['$scope', '$http', '$timeout', '$window', 'mai
 						OriginStateCode : globalArray.OriginStateCode[i],
 						OurRatePerMile: globalArray.OurRatePerMile[i],
 						OurTransportationCost:  globalArray.OurTransportationCost[i],
-						PriceDate: globalArray.PriceDate[i]
+						PriceDate: globalArray.PriceDate[i],
+						OurPricePerMile: globalArray.OurPricePerMile[i]                        
 					});
 				}
 
@@ -328,7 +329,7 @@ app.controller("MainController", ['$scope', '$http', '$timeout', '$window', 'mai
 		});
 		$scope.GetOrder();
 		$scope.UpdateCostBarChart();
-
+		$scope.XPOProfitPerMile();
 		//var distinationCityCountArray = {};
 		////for (var i = 1; i <= tempDestinationArray.length; i++) {
 		////    distinationCityCountArray[i] = distinationCityCountArray[tempDestinationArray[i - 1]] == undefined ? 0 : tempDestinationArray[tempDateArray[i - 1]];
@@ -553,7 +554,7 @@ app.controller("MainController", ['$scope', '$http', '$timeout', '$window', 'mai
 					},
 					height: 30,
 					extent: [0,20]
-				}
+					}
 			},
 			zoom: {
 				enabled: true
@@ -684,5 +685,112 @@ app.controller("MainController", ['$scope', '$http', '$timeout', '$window', 'mai
 		});
 	}
 
+	$scope.XPOProfitPerMile = function (obj) {
+	    var value = parseInt($('select :selected').val());
+	    if (value == null || value == undefined || isNaN(value))
+	        value = $scope.selectedOriginCity;
+	    var tempArrayXPOCost = new Array();
+	    tempArrayXPOCost.push("XPO Cost per Mile");
 
+	    var tempArrayXPOPrice = new Array();
+	    tempArrayXPOPrice.push("XPO Price per Mile");
+
+	    var tempArrayProfit = new Array();
+	    tempArrayProfit.push("Profit value");
+
+	    var tempCityArray = new Array();
+	    var chartToolTipArray = new Array();
+	    for (var i = 0; i < dataArray.length; i++) {
+	        if ($scope.originCities[value].cityName == dataArray[i].OriginCity) {
+	            tempArrayXPOCost.push(dataArray[i].OurRatePerMile);
+	            tempArrayXPOPrice.push(dataArray[i].OurPricePerMile);
+	            tempArrayProfit.push(dataArray[i].OurPricePerMile - dataArray[i].OurRatePerMile);
+
+	            tempCityArray.push(dataArray[i].DestinationCity + "(" + dataArray[i].DestinationPostalCode + ")");
+
+	            chartToolTipArray.push({
+	                ratePerMile: dataArray[i].OurRatePerMile,
+	                pricePerMile: dataArray[i].OurPricePerMile,
+	                profit: ((dataArray[i].OurPricePerMile - dataArray[i].OurRatePerMile) / dataArray[i].OurRatePerMile) * 100,
+	                cityName: dataArray[i].DestinationCity + "(" + dataArray[i].DestinationPostalCode + ")"
+	            })
+	        }
+	    }
+
+	    var chartColorArray = new Array();
+	    chartColorArray.push("#1dd09c");
+	    chartColorArray.push("#8c7cac");
+	    chartColorArray.push("#9c3773");
+
+	    var chart = c3.generate({
+	        bindto: d3.select("#modelXPOProfitBar"),
+	        padding: {
+	            bottom: 30
+	        },
+	        data: {
+	            columns: [
+				          tempArrayXPOCost,
+				          tempArrayXPOPrice,
+				          tempArrayProfit
+	            ],
+	            type: 'bar'
+	        },
+	        bar: {
+	            width: {
+	                ratio: 0.5
+	            }
+	        },
+	        axis: {
+	            x: {
+	                type: 'category',
+	                categories: tempCityArray,
+	                tick: {
+	                    rotate: -30,
+	                    multiline: false,
+	                    fit: true,
+	                    centered: true,
+	                    culling: {
+	                        max: 1
+	                    }
+	                },
+	                height: 30,
+	                extent: [0, 20]
+	            }
+	        },
+	        zoom: {
+	            enabled: true
+	        }, subchart: {
+	            show: true,
+	            size: {
+	                height: 40
+	            },
+	            onbrush: function (domain) {
+	                console.log(domain);
+	            },
+	            axis: {
+	                x: {
+	                    show: false
+	                }
+	            }
+	        },
+	        tooltip: { //
+	            grouped: false, contents: function (d, defaultTitleFormat, defaultValueFormat, color) { 
+	                var html = '<div class="tooltip-profit-bar" style="background:red"><p>' + chartToolTipArray[d[0].index].cityName + '</p>';
+	                html += '<p>Rate per mile:' + chartToolTipArray[d[0].index].ratePerMile + '</p>'
+	                html += '<p>Price per mile:' + chartToolTipArray[d[0].index].pricePerMile + '</p>'
+	                html += '<p>Profit:' + $scope.GetFixedValue(chartToolTipArray[d[0].index].profit) + '% </p></div>'
+	                return html;
+	            } 
+	        },
+	        color: {
+	            pattern: chartColorArray
+	        }
+	    });
+	}
+
+	$scope.GetFixedValue = function (value) {
+	    if(value != undefined && !isNaN(parseInt(value))){
+	        return value.toFixed(2);
+	    }
+	}
 }]);
