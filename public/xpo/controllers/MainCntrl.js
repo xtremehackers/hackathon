@@ -236,6 +236,7 @@ app.controller("MainController", ['$scope', '$http', '$timeout', '$window', 'mai
 	}*/	
 	
 
+
 	$scope.UpdateBarChart = function (obj) {
 		var value = parseInt($('select :selected').val());
 		if(value == null || value == undefined || isNaN(value))
@@ -272,7 +273,7 @@ app.controller("MainController", ['$scope', '$http', '$timeout', '$window', 'mai
 		var chart = c3.generate({
 			bindto: d3.select("#modelBar"),
 			padding: {
-				bottom: 90
+				bottom: 30
 			},
 			data: {
 				columns: [
@@ -299,11 +300,27 @@ app.controller("MainController", ['$scope', '$http', '$timeout', '$window', 'mai
 						culling: {
 							max: 1
 						}
-					}
+					},
+					height: 30,
+					extent: [0,20]
 				}
 			},
 			zoom: {
 				enabled: true
+			},
+			subchart:{ 
+				show: true, 
+				size: {
+					height: 40 
+				}, 
+				onbrush: function (domain) {
+					console.log(domain); 
+				},
+				axis: {
+					x:{
+						show:false
+					}
+				}
 			},
 			color: {
 				pattern: chartColorArray
@@ -322,21 +339,21 @@ app.controller("MainController", ['$scope', '$http', '$timeout', '$window', 'mai
 		//});
 
 		//$scope.maxFrequentCities = new Array();
-		
-		
+
+
 		$scope.mostFrequentDestination = $scope.mostFrequent(tempDestinationArray);
 
-	    $scope.leastFrequentDestination = $scope.leastFrequent(tempDestinationArray);
+		$scope.leastFrequentDestination = $scope.leastFrequent(tempDestinationArray);
 
-	    $scope.isNutralFrequency = false;
+		$scope.isNutralFrequency = false;
 
-	    if ($scope.mostFrequentDestination.length == $scope.leastFrequentDestination) {
-	        for (var i = 0; i < $scope.mostFrequentDestination.length; i++) {
-	            if ($scope.mostFrequentDestination[i].val != $scope.leastFrequentDestination[i].val || $scope.mostFrequentDestination[i].count != $scope.leastFrequentDestination[i].count)
-	                $scope.isNutralFrequency = true;
-	        }
-	    }
-		
+		if ($scope.mostFrequentDestination.length == $scope.leastFrequentDestination) {
+			for (var i = 0; i < $scope.mostFrequentDestination.length; i++) {
+				if ($scope.mostFrequentDestination[i].val != $scope.leastFrequentDestination[i].val || $scope.mostFrequentDestination[i].count != $scope.leastFrequentDestination[i].count)
+					$scope.isNutralFrequency = true;
+			}
+		}
+
 
 	}
 
