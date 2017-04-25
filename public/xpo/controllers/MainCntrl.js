@@ -505,6 +505,7 @@ app.controller("MainController", ['$scope', '$http', '$timeout', '$window', 'mai
 
 
 	$scope.onChartTypeChange = function(chartType){
+		$scope.selectedChartType = chartType;
 		var tempRateArray = new Array();
 		tempRateArray.push("Rate chart for origin");
 		var destinationArray = new Array();
@@ -571,6 +572,14 @@ app.controller("MainController", ['$scope', '$http', '$timeout', '$window', 'mai
 						show:false
 					}
 				}
+			},
+			grid:{
+				x:{
+					show: $scope.x_grid
+				},
+				y:{
+					show: $scope.y_grid
+				}
 			}
 		});
 
@@ -581,9 +590,16 @@ app.controller("MainController", ['$scope', '$http', '$timeout', '$window', 'mai
 	var changeRateChart = function(){
 		$scope.chartTypes = ['Line', 'Bar', 'Area'];
 		$scope.selectedChartType = 'Bar';
+		$scope.x_grid = false;
+		$scope.y_grid = false;
 		$scope.onChartTypeChange($scope.selectedChartType);
 	}
 
+	$scope.gridCheckBox = function(){
+		$scope.x_grid = !$scope.x_grid;
+		$scope.y_grid = !$scope.y_grid;
+		$scope.onChartTypeChange($scope.selectedChartType);
+	}
 
 	$scope.getAtalantaData = function(){
 		changeRateChart();
@@ -775,10 +791,17 @@ app.controller("MainController", ['$scope', '$http', '$timeout', '$window', 'mai
 	        },
 	        tooltip: { //
 	            grouped: false, contents: function (d, defaultTitleFormat, defaultValueFormat, color) { 
-	                var html = '<div class="tooltip-profit-bar" style="background:red"><p>' + chartToolTipArray[d[0].index].cityName + '</p>';
-	                html += '<p>Rate per mile:' + chartToolTipArray[d[0].index].ratePerMile + '</p>'
-	                html += '<p>Price per mile:' + chartToolTipArray[d[0].index].pricePerMile + '</p>'
-	                html += '<p>Profit:' + $scope.GetFixedValue(chartToolTipArray[d[0].index].profit) + '% </p></div>'
+	                var html = '<table class="c3-tooltip"> <tbody><tr>';
+	    			html += '<th colspan="2">'+chartToolTipArray[d[0].index].cityName+'</th></tr>';
+	    			html += '<tr class="c3-tooltip-name--XPO-transportation-cost">';
+	    			html += '<td class="name"><span style="background-color: #1dd09c"></span>Rate per mile</td>';
+	    			html += '<td class="value">'+chartToolTipArray[d[0].index].ratePerMile+'</td></tr>';
+	    			html += '<tr class="c3-tooltip-name--Market-max-transportation-cost">';
+	    			html += '<td class="name"><span style="background-color: #9c3773"></span>Price per mile</td>';
+	    			html += '<td class="value">'+chartToolTipArray[d[0].index].pricePerMile+'</td></tr>';
+	    			html += '<tr class="c3-tooltip-name--Market-average-transportation-cost">';
+	    			html += '<td class="name"><span style="background-color: #8080ff"></span>Profit</td>';
+	    			html += '<td class="value">'+$scope.GetFixedValue(chartToolTipArray[d[0].index].profit)+'%</td></tr></tbody></table>';
 	                return html;
 	            } 
 	        },

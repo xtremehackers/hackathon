@@ -658,3 +658,10 @@
 [data-current-skin="cyan"] h2 {
     color: #cc0000 !important;
 }
+
+
+
+.tooltip-profit-bar{
+	background-color: #fff;
+	color: #000;
+}
