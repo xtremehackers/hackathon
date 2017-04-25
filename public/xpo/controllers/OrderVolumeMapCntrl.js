@@ -1,8 +1,15 @@
 app.controller("OrderVolumeMapCntrl", ["$scope", "mainService", function($scope, mainService){
-	var width = 1000,
+	/*var width = 1000,
 	height = 600,
-	centered;
+	centered;*/
 
+	//Sets dimensions
+	var margin = {top: 10, left: 10, bottom: 10, right: 10}
+	  , width = window.outerWidth
+	  , width = width - margin.left - margin.right
+	  , mapRatio = .5
+	  , height = width * mapRatio;
+	
 	var tooltipText = '<h4> City: %heading </h4><p> Order Count: %val1</p>';
 	
 	//console.log(mainService.unique(globalArray["OriginStateCode"]));
@@ -40,9 +47,22 @@ app.controller("OrderVolumeMapCntrl", ["$scope", "mainService", function($scope,
 	
 	var states = {};
 	
+	var margin = {top: 10, left: 10, bottom: 10, right: 10}
+	, width = parseInt(d3.select('#volumeMaps').style('width'))
+	, width = width - margin.left - margin.right
+	, mapRatio = .5
+	, height = width * mapRatio
+	, scale0 = (width - 1) / 2 / Math.PI;
+	
 	var projection = d3.geo.albersUsa()
-	.scale(1070)
+	.scale(width)
 	.translate([width / 2, height / 2]);
+	
+	var zoom = d3.behavior.zoom()
+    .translate([width / 2, height / 2])
+    .scale(scale0)
+    .scaleExtent([scale0, 8 * scale0])
+    .on("zoom", zoomed);
 
 	var path = d3.geo.path()
 	.projection(projection);
@@ -50,9 +70,11 @@ app.controller("OrderVolumeMapCntrl", ["$scope", "mainService", function($scope,
 	var graticule = d3.geo.graticule();
 
 	
+	
 	var svg = d3.select("#volumeMaps").append("svg")
 	.attr("width", width)
-	.attr("height", height);
+	.attr("height", height)
+//	.call(d3.behavior.zoom().on("zoom", redraw));
 
 	var tooltip = d3.select("#volumeMaps").append("div").attr("class",
 	"toolTip");
@@ -82,6 +104,10 @@ app.controller("OrderVolumeMapCntrl", ["$scope", "mainService", function($scope,
 	var imageGroup = g.append('g');
 	var pointGroup = g.append('g');
 
+/*	svg
+    .call(zoom)
+    .call(zoom.event);*/
+	
 //	Also, text needs to be added to the `g` group
 	/*var point = pointGroup.append("g")
 	.attr("class", "points")
@@ -149,7 +175,8 @@ app.controller("OrderVolumeMapCntrl", ["$scope", "mainService", function($scope,
 		 .data(states.features)
 		 .enter().append("path")
 		 .attr("d", path)
-		 .style("fill", function(d, i) { return color(d.color = d3.max(states.features[i], function(n) { return states.features[n].properties.value; }) + 1 | 0); })
+		 //.style("fill", function(d, i) { return color(d.color = d3.max(states.features[i], function(n) { return states.features[n].properties.value; }) + 1 | 0); })
+		 .style("fill", "#ffc107");
 		 
 		 stateGroup.append("g")
 	      .attr("class", "states-names")
@@ -190,7 +217,7 @@ app.controller("OrderVolumeMapCntrl", ["$scope", "mainService", function($scope,
                  return projection([d.lon, d.lat])[1];
          })
          .attr("r", 3)
-         .style("fill", "yellow")
+         .style("fill", "red")
          .style("opacity", 0.75)
          .on("mousemove", function(d){
         	 tooltip
@@ -353,4 +380,65 @@ app.controller("OrderVolumeMapCntrl", ["$scope", "mainService", function($scope,
 		.attr("transform", "translate(" + width / 2 + "," + height / 2 + ")scale(" + k + ")translate(" + -x + "," + -y + ")")
 		.style("stroke-width", 1.5 / k + "px");
 	}
+	
+	//d3.select(window).on('resize', resize);
+
+	function resize() {
+	    // adjust things when the window size changes
+	    width = parseInt(d3.select('#volumeMaps').style('width'));
+	    width = width - margin.left - margin.right;
+	    height = width * mapRatio;
+
+	    // update projection
+	    projection = d3.geo.albersUsa()
+	        .translate([width / 2, height / 2])
+	        .scale(width);
+
+	    path = d3.geo.path()
+	      .projection(projection);
+	    
+	    // resize the map container
+	    svg
+	        .style('width', width + 'px')
+	        .style('height', height + 'px');
+
+	    // resize the map
+	    //map.select('.land').attr('d', path);
+	    //map.selectAll('.state').attr('d', path);
+	    svg.selectAll("path")
+	    .attr("d", path);
+	    
+	    radius = svg.selectAll('circle').attr("r");
+	    
+	    svg.selectAll("circle")
+	    .data(statesList)
+	    .attr("cx", function(d) {
+        	 if(projection([d.lon, d.lat]))
+                 return projection([d.lon, d.lat])[0];
+         })
+         .attr("cy", function(d) {
+        	 if(projection([d.lon, d.lat]))
+                 return projection([d.lon, d.lat])[1];
+         })
+         .attr("r", radius * mapRatio);
+	    
+	}
+	
+	function zoomed() {
+		  projection = d3.geo.albersUsa()
+		      .translate(zoom.translate())
+		      .scale(zoom.scale());
+
+		  path = d3.geo.path()
+	      .projection(projection);
+		  
+		  svg.selectAll("path")
+		      .attr("d", path);
+		  
+		  svg.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+		  svg.select("#state-borders").style("stroke-width", 1.5 / d3.event.scale + "px");
+		  //svg.select(".county-border").style("stroke-width", .5 / d3.event.scale + "px");
+		  
+		}
+	
 }]);

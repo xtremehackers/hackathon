@@ -185,8 +185,9 @@ app.controller("MapCntrl", ["$scope", "mainService","growlService", function($sc
 		.data(states.features)
 		.enter().append("path")
 		.attr("d", path)
-		.style("fill", function(d, i) { return color(d.color = d3.max(states.features[i], function(n) { return states.features[n].properties.value; }) + 1 | 0); })
-
+		//.style("fill", function(d, i) { return color(d.color = d3.max(states.features[i], function(n) { return states.features[n].properties.value; }) + 1 | 0); })
+		.style("fill", "#2198f3");
+		
 		stateGroup.append("g")
 		.attr("class", "states-names")
 		.selectAll("text")
