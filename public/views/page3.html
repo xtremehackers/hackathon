@@ -14,28 +14,41 @@
 			<div class="block-header">
 				<h2>Regional Transport Price</h2>
 
-				<ul class="actions">
-					<li class="dropdown" dropdown><a href="" dropdown-toggle>
-							<i class="zmdi zmdi-more-vert"></i>
-					</a>
 
-						<ul class="dropdown-menu dropdown-menu-right">
-							<li ng-repeat="chartType in chartTypes track by $index"
-								ng-model="selectedChartType"><a
-								ng-click="onChartTypeChange(chartType)">{{chartType}}</a></li>
-						</ul></li>
-				</ul>
 
 			</div>
 
 
 
 			<div>
-				<div style="text-align: center;"><input type="checkbox" ng-click="gridCheckBox()"> Show Grid</div><br />
+
+				<br />
 				<div class="panel panel-primary">
 					<div class="panel-heading">
 
 						<i class="zmdi zmdi-trending-up"></i> Rate Chart For Region
+
+						<ul class="actions"
+							style="float: right; top: -5px; position: relative;">
+							<li class="dropdown" dropdown><a href="" dropdown-toggle>
+									<i class="zmdi zmdi-more-vert" style="color: #fff;"></i>
+							</a>
+
+								<ul class="dropdown-menu dropdown-menu-right">
+									<li ng-repeat="chartType in chartTypes track by $index"
+										ng-model="selectedChartType"><a
+										ng-click="onChartTypeChange(chartType)">{{chartType}}</a></li>
+
+									<li><a href="/api/getExcelData/1" target="_blank">API</a></li>
+								</ul></li>
+						</ul>
+
+
+						<span style="float: right;"><input type="checkbox"
+							ng-click="gridCheckBox()"> <span
+							style="top: -2px; position: relative; padding-right: 10px;">Show
+								Grid</span></span>
+
 					</div>
 					<div class="panel-body">
 						<div id="rateChartBar" ng-init="getAtalantaData()"></div>
