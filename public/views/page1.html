@@ -43,7 +43,7 @@
 				<div class="panel panel-primary">
 					<div class="panel-heading">
 
-						<i class="zmdi zmdi-trending-up"></i> Market Price Estimation
+						<i class="zmdi zmdi-trending-up"></i> Market Price Comparison
 
 
 						<ul class="actions"
@@ -74,7 +74,7 @@
 				<div class="panel panel-primary">
 					<div class="panel-heading">
 
-						<i class="zmdi zmdi-trending-up"></i> Market Cost Comparison Graph
+						<i class="zmdi zmdi-trending-up"></i> XPO & Market Cost Comparison
 					</div>
 					<div class="panel-body">
 						<div id="modelCostBar"></div>
@@ -85,7 +85,7 @@
 				<div class="panel panel-primary">
 					<div class="panel-heading">
 
-						<i class="zmdi zmdi-trending-up"></i> XPO Profit Values Data
+						<i class="zmdi zmdi-trending-up"></i> XPO Profit per mile
 					</div>
 					<div class="panel-body">
 						<div id="modelXPOProfitBar"></div>
@@ -95,31 +95,30 @@
 				<br /> <br />
 
 				<div class="col-md-4">
-					<div class="panel panel-primary">
+					<div class="panel panel-primary" style="min-height: 386px;">
 						<div class="panel-heading">
 
-							<i class="zmdi zmdi-trending-up"></i> Market Cost Comparison
-							Graph
+							<i class="zmdi zmdi-trending-up"></i> Hot spot areas
 						</div>
 						<div class="panel-body">
 							<p ng-hide="isNutralFrequency">Least Frequent Destinations:
-							<ul>
-								<li ng-repeat="item in leastFrequentDestination">
+							<ul class="list-group">
+								<li class="list-group-item list-group-item-danger" ng-repeat="item in leastFrequentDestination">
 									{{item.val}}</li>
 							</ul>
 							</p>
 
 							<p ng-hide="isNutralFrequency">Most Frequent Destinations:
-							<ul>
-								<li ng-repeat="item in mostFrequentDestination">
+							<ul class="list-group">
+								<li class="list-group-item list-group-item-info" ng-repeat="item in mostFrequentDestination">
 									{{item.val}}</li>
 							</ul>
 							</p>
 
 							<p ng-show="isNutralFrequency">Fright movement is normal for
 								destinations:
-							<ul ng-show="isNutralFrequency">
-								<li ng-repeat="item in mostFrequentDestination">
+							<ul class="list-group" ng-show="isNutralFrequency">
+								<li class="list-group-item list-group-item-success" ng-repeat="item in mostFrequentDestination">
 									{{item.val}}</li>
 							</ul>
 							</p>
@@ -131,7 +130,7 @@
 					<div class="panel panel-primary">
 						<div class="panel-heading">
 
-							<i class="zmdi zmdi-trending-up"></i> Monthly Estimation
+							<i class="zmdi zmdi-trending-up"></i> Orders received per month
 						</div>
 						<div class="panel-body">
 							<div id="modelBarDate"></div>
@@ -140,7 +139,7 @@
 				</div>
 
 				<div class="col-md-4">
-					<div class="panel panel-primary">
+					<div class="panel panel-primary" style="min-height: 386px;">
 						<div class="panel-heading">
 
 							<i class="zmdi zmdi-trending-up"></i> Overall Profit
