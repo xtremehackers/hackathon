@@ -28,13 +28,13 @@ app.controller("OrderVolumeMapCntrl", ["$scope", "mainService", function($scope,
 		avgMarketPrice = 0;
 		xpoCost = 0;
 		count = 0;
-		for(k=1; k < globalArray["DestinationCity"].length; k++){
-			if((globalArray["DestinationCity"])[k] == destination[h]){
-				latitude = globalArray["DestinationLatitude"][k];
-				longitude = globalArray["DestinationLongitude"][k];
-				avgMarketPrice += parseFloat(globalArray["MarketAvgPrice"][k]);
-				xpoCost += parseFloat(globalArray["OurTransportationCost"][k]);
-				DeliveredDate = globalArray.DeliveredDate[k],
+		for(k=1; k < dataArray.length; k++){
+			if((dataArray[k]["DestinationCity"]) == destination[h]){
+				latitude = dataArray[k]["DestinationLatitude"];
+				longitude = dataArray[k]["DestinationLongitude"];
+				avgMarketPrice += parseFloat(dataArray[k]["MarketAvgPrice"]);
+				xpoCost += parseFloat(dataArray[k]["OurTransportationCost"]);
+				DeliveredDate = dataArray[k].DeliveredDate,
 				count++;
 			}
 		}
@@ -396,8 +396,38 @@ app.controller("OrderVolumeMapCntrl", ["$scope", "mainService", function($scope,
 	function update(value) {
 	    document.getElementById("range").innerHTML=month[value];
 	    inputValue = value;
-	    svg.selectAll(".volume")
-	        .attr("fill", dateMatch);
+	    /*svg.selectAll(".volume")
+	        .attr("fill", dateMatch);*/
+	    
+	    svg.selectAll("circle").remove();
+	    
+	    svg.selectAll("circle")
+        .data(statesList)
+        .enter()
+        .append("circle")
+        .attr("cx", function(d) {
+       	 if(projection([d.lon, d.lat]))
+                return projection([d.lon, d.lat])[0];
+        })
+        .attr("cy", function(d) {
+       	 if(projection([d.lon, d.lat]))
+                return projection([d.lon, d.lat])[1];
+        })
+        .attr("r", 3)
+        .attr( "class", "volume")
+        .style("fill", dateMatch)
+        .style("opacity", 0.75)
+        .on("mousemove", function(d){
+       	 tooltip
+	         .html(prepareTooltip(d))
+	         .style("left", (d3.event.pageX - 34) + "px")
+	         .style("top", (d3.event.pageY - 12) + "px")
+       	 .style("display", "inline-block");
+        })
+        .on("mouseout", function(d){
+       	 tooltip.style("display", "none");
+       });
+	    
 	}
 	
 	function dateMatch(data, value) {
