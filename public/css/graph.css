@@ -87,3 +87,8 @@ path.link {
     stroke: #888;
     font-size: 10px;
 }
+
+#sliderContainer {
+    text-align: center;
+    position: relative;
+}
