@@ -30,17 +30,18 @@
 
 			<div ng-if="graphs.isFileLoaded">
 			
-				<div class="panel panel-primary">
+				<div class="panel panel-primary" ng-controller="OrderVolumeMapCntrl">
 					<div class="panel-heading">
 
 						<i class="zmdi zmdi-trending-up"></i> City order
 					</div>
 					<div class="panel-body">
-						<div id="volumeMaps" ng-controller="OrderVolumeMapCntrl"></div>
+						<div id="volumeMaps"></div>
 						<div id="sliderContainer">
 						    <input id="timeslide" type="range" min="0" max="11" value="0" step="1"/><br>
 						    <span id="range">January</span>
 						</div>
+						<button ng-click="exportPNG()">Export</button>
 					</div>
 				</div>
 				
@@ -67,6 +68,7 @@
 								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Total Transportation Cost Incurred:</b> {{totalTransportationCost | currency}}</p>
 							</div>
 							<div id="maps"></div>
+							<button ng-click="exportPNG()">Export</button>
 						</div>
 					</div>
 				</div>
@@ -77,8 +79,9 @@
 
 						<i class="zmdi zmdi-trending-up"></i> State-wise Transportation Cost 
 					</div>
-					<div class="panel-body">
-						<div id="stateMap" ng-controller="StateMapCntrl"></div>
+					<div class="panel-body" ng-controller="StateMapCntrl">
+						<div id="stateMap"></div>
+						<button ng-click="exportPNG()">Export</button>
 					</div>
 				</div>
 			
