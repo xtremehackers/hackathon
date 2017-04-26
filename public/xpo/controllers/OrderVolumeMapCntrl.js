@@ -18,22 +18,22 @@ app.controller("OrderVolumeMapCntrl", ["$scope", "mainService", function($scope,
 	
 	//console.log(mainService.unique(globalArray["OriginStateCode"]));
 	
-	var destination = mainService.unique(globalArray["DestinationCity"]);
+	var destination = $scope.graphs.destination; //mainService.unique(globalArray["DestinationCity"]);
 	var avgMarketPrice;
 	var statesList = [];
 	
-	destination.shift();
+	//destination.shift();
 	
-	for(h = 1; h < destination.length; h++){
+	for(h = 0; h < destination.length; h++){
 		avgMarketPrice = 0;
 		xpoCost = 0;
 		count = 0;
-		for(k=1; k < dataArray.length; k++){
-			if((dataArray[k]["DestinationCity"]) == destination[h]){
-				latitude = dataArray[k]["DestinationLatitude"];
-				longitude = dataArray[k]["DestinationLongitude"];
-				avgMarketPrice += parseFloat(dataArray[k]["MarketAvgPrice"]);
-				xpoCost += parseFloat(dataArray[k]["OurTransportationCost"]);
+		for(k=0; k < dataArray.length; k++){
+			if(dataArray[k].DestinationCity == destination[h]){
+				latitude = dataArray[k].DestinationLatitude;
+				longitude = dataArray[k].DestinationLongitude;
+				avgMarketPrice += parseFloat(dataArray[k].MarketAvgPrice);
+				xpoCost += parseFloat(dataArray[k].OurTransportationCost);
 				DeliveredDate = dataArray[k].DeliveredDate,
 				count++;
 			}
