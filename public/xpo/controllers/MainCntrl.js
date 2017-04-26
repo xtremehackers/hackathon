@@ -235,8 +235,21 @@ app.controller("MainController", ['$scope', '$http', '$timeout', '$window', 'mai
 	/*$scope.updateMap = function(obj){
 		console.log(obj);
 	}*/	
-	
 
+	$scope.chartTypesPE = ['Line', 'Bar', 'Area-spline'];
+	$scope.selectedChartTypePE = 'Bar';
+	$scope.changePriceEstimation = function(chartType){
+		$scope.selectedChartTypePE = chartType.toLowerCase();
+		$scope.UpdateBarChart();
+	}
+
+	$scope.x_gridPE = false;
+	$scope.y_gridPE = false;
+	$scope.gridCheckBoxPE = function(){
+		$scope.x_gridPE = !$scope.x_gridPE;
+		$scope.y_gridPE = !$scope.y_gridPE;
+		$scope.UpdateBarChart();
+	}
 
 	$scope.UpdateBarChart = function (obj) {
 		var value = parseInt($('select :selected').val());
@@ -280,7 +293,7 @@ app.controller("MainController", ['$scope', '$http', '$timeout', '$window', 'mai
 				columns: [
 				          tempArrayMarketMin
 				          ],
-				          type: 'bar'
+				          type: $scope.selectedChartTypePE.toLowerCase()
 			},
 			bar: {
 				width: {
@@ -321,23 +334,31 @@ app.controller("MainController", ['$scope', '$http', '$timeout', '$window', 'mai
 					}
 				}
 			},
+			grid:{
+				x:{
+					show: $scope.x_gridPE
+				},
+				y:{
+					show: $scope.y_gridPE
+				}
+			},
 			color: {
 				pattern: chartColorArray
 			}
 		});
-		
+
 		setTimeout(function () {
-		    chart.load({
-		        columns: [tempArrayMarketMax]
-		    });
+			chart.load({
+				columns: [tempArrayMarketMax]
+			});
 		}, 1500);
-		
+
 		setTimeout(function () {
-		    chart.load({
-		        columns: [tempArrayAvg]
-		    });
+			chart.load({
+				columns: [tempArrayAvg]
+			});
 		}, 3000);
-		
+
 		$scope.GetOrder();
 		$scope.UpdateCostBarChart();
 		$scope.XPOProfitPerMile();
@@ -356,7 +377,7 @@ app.controller("MainController", ['$scope', '$http', '$timeout', '$window', 'mai
 		$scope.generateGaugeChart();
 
 	}
-	
+
 	$scope.generateDestinationStatics = function(tempDestinationArray){
 		$scope.mostFrequentDestination = $scope.mostFrequent(tempDestinationArray);
 
@@ -512,23 +533,23 @@ app.controller("MainController", ['$scope', '$http', '$timeout', '$window', 'mai
 				pattern: chartColorArray
 			}
 		});
-		
+
 		setTimeout(function () {
-		    chart.load({
-		        columns: [tempArrayMarketAvg]
-		    });
+			chart.load({
+				columns: [tempArrayMarketAvg]
+			});
 		}, 1500);
-		
+
 		setTimeout(function () {
-		    chart.load({
-		        columns: [tempArrayMarketMax]
-		    });
+			chart.load({
+				columns: [tempArrayMarketMax]
+			});
 		}, 3000);
-		
+
 		setTimeout(function () {
-		    chart.load({
-		        columns: [tempArrayMarketMin]
-		    });
+			chart.load({
+				columns: [tempArrayMarketMin]
+			});
 		}, 4500);
 	}
 
@@ -584,7 +605,7 @@ app.controller("MainController", ['$scope', '$http', '$timeout', '$window', 'mai
 					},
 					height: 30,
 					extent: [0,20]
-					}
+				}
 			},
 			zoom: {
 				enabled: true
@@ -731,181 +752,181 @@ app.controller("MainController", ['$scope', '$http', '$timeout', '$window', 'mai
 	}
 
 	$scope.XPOProfitPerMile = function (obj) {
-	    var value = parseInt($('select :selected').val());
-	    if (value == null || value == undefined || isNaN(value))
-	        value = $scope.selectedOriginCity;
-	    var tempArrayXPOCost = new Array();
-	    tempArrayXPOCost.push("XPO Cost per Mile");
+		var value = parseInt($('select :selected').val());
+		if (value == null || value == undefined || isNaN(value))
+			value = $scope.selectedOriginCity;
+		var tempArrayXPOCost = new Array();
+		tempArrayXPOCost.push("XPO Cost per Mile");
 
-	    var tempArrayXPOPrice = new Array();
-	    tempArrayXPOPrice.push("XPO Price per Mile");
+		var tempArrayXPOPrice = new Array();
+		tempArrayXPOPrice.push("XPO Price per Mile");
 
-	    var tempArrayProfit = new Array();
-	    tempArrayProfit.push("Profit value");
+		var tempArrayProfit = new Array();
+		tempArrayProfit.push("Profit value");
 
-	    var tempCityArray = new Array();
-	    var chartToolTipArray = new Array();
-	    for (var i = 0; i < dataArray.length; i++) {
-	        if ($scope.originCities[value].cityName == dataArray[i].OriginCity) {
-	            tempArrayXPOCost.push(dataArray[i].OurRatePerMile);
-	            tempArrayXPOPrice.push(dataArray[i].OurPricePerMile);
-	            tempArrayProfit.push(dataArray[i].OurPricePerMile - dataArray[i].OurRatePerMile);
+		var tempCityArray = new Array();
+		var chartToolTipArray = new Array();
+		for (var i = 0; i < dataArray.length; i++) {
+			if ($scope.originCities[value].cityName == dataArray[i].OriginCity) {
+				tempArrayXPOCost.push(dataArray[i].OurRatePerMile);
+				tempArrayXPOPrice.push(dataArray[i].OurPricePerMile);
+				tempArrayProfit.push(dataArray[i].OurPricePerMile - dataArray[i].OurRatePerMile);
 
-	            tempCityArray.push(dataArray[i].DestinationCity + "(" + dataArray[i].DestinationPostalCode + ")");
+				tempCityArray.push(dataArray[i].DestinationCity + "(" + dataArray[i].DestinationPostalCode + ")");
 
-	            chartToolTipArray.push({
-	                ratePerMile: dataArray[i].OurRatePerMile,
-	                pricePerMile: dataArray[i].OurPricePerMile,
-	                profit: ((dataArray[i].OurPricePerMile - dataArray[i].OurRatePerMile) / dataArray[i].OurRatePerMile) * 100,
-	                cityName: dataArray[i].DestinationCity + "(" + dataArray[i].DestinationPostalCode + ")"
-	            })
-	        }
-	    }
+				chartToolTipArray.push({
+					ratePerMile: dataArray[i].OurRatePerMile,
+					pricePerMile: dataArray[i].OurPricePerMile,
+					profit: ((dataArray[i].OurPricePerMile - dataArray[i].OurRatePerMile) / dataArray[i].OurRatePerMile) * 100,
+					cityName: dataArray[i].DestinationCity + "(" + dataArray[i].DestinationPostalCode + ")"
+				})
+			}
+		}
 
-	    var chartColorArray = new Array();
-	    chartColorArray.push("#1dd09c");
-	    chartColorArray.push("#8c7cac");
-	    chartColorArray.push("#9c3773");
+		var chartColorArray = new Array();
+		chartColorArray.push("#1dd09c");
+		chartColorArray.push("#8c7cac");
+		chartColorArray.push("#9c3773");
 
-	    var chart = c3.generate({
-	        bindto: d3.select("#modelXPOProfitBar"),
-	        padding: {
-	            bottom: 30
-	        },
-	        data: {
-	            columns: [
+		var chart = c3.generate({
+			bindto: d3.select("#modelXPOProfitBar"),
+			padding: {
+				bottom: 30
+			},
+			data: {
+				columns: [
 				          tempArrayXPOCost
-	            ],
-	            type: 'bar'
-	        },
-	        bar: {
-	            width: {
-	                ratio: 0.5
-	            }
-	        },
-	        axis: {
-	            x: {
-	                type: 'category',
-	                categories: tempCityArray,
-	                tick: {
-	                    rotate: -30,
-	                    multiline: false,
-	                    fit: true,
-	                    centered: true,
-	                    culling: {
-	                        max: 1
-	                    }
-	                },
-	                height: 30,
-	                extent: [0, 20]
-	            }
-	        },
-	        zoom: {
-	            enabled: true
-	        }, subchart: {
-	            show: true,
-	            size: {
-	                height: 40
-	            },
-	            onbrush: function (domain) {
-	                console.log(domain);
-	            },
-	            axis: {
-	                x: {
-	                    show: false
-	                }
-	            }
-	        },
-	        tooltip: { //
-	            grouped: false, contents: function (d, defaultTitleFormat, defaultValueFormat, color) { 
-	                var html = '<table class="c3-tooltip"> <tbody><tr>';
-	    			html += '<th colspan="2">'+chartToolTipArray[d[0].index].cityName+'</th></tr>';
-	    			html += '<tr class="c3-tooltip-name--XPO-transportation-cost">';
-	    			html += '<td class="name"><span style="background-color: #1dd09c"></span>Rate per mile</td>';
-	    			html += '<td class="value">'+chartToolTipArray[d[0].index].ratePerMile+'</td></tr>';
-	    			html += '<tr class="c3-tooltip-name--Market-max-transportation-cost">';
-	    			html += '<td class="name"><span style="background-color: #9c3773"></span>Price per mile</td>';
-	    			html += '<td class="value">'+chartToolTipArray[d[0].index].pricePerMile+'</td></tr>';
-	    			html += '<tr class="c3-tooltip-name--Market-average-transportation-cost">';
-	    			html += '<td class="name"><span style="background-color: #8080ff"></span>Profit</td>';
-	    			html += '<td class="value">'+$scope.GetFixedValue(chartToolTipArray[d[0].index].profit)+'%</td></tr></tbody></table>';
-	                return html;
-	            } 
-	        },
-	        color: {
-	            pattern: chartColorArray
-	        }
-	    });
-	    
-	    setTimeout(function () {
-		    chart.load({
-		        columns: [tempArrayXPOPrice]
-		    });
-		}, 1500);
-		
+				          ],
+				          type: 'bar'
+			},
+			bar: {
+				width: {
+					ratio: 0.5
+				}
+			},
+			axis: {
+				x: {
+					type: 'category',
+					categories: tempCityArray,
+					tick: {
+						rotate: -30,
+						multiline: false,
+						fit: true,
+						centered: true,
+						culling: {
+							max: 1
+						}
+					},
+					height: 30,
+					extent: [0, 20]
+				}
+			},
+			zoom: {
+				enabled: true
+			}, subchart: {
+				show: true,
+				size: {
+					height: 40
+				},
+				onbrush: function (domain) {
+					console.log(domain);
+				},
+				axis: {
+					x: {
+						show: false
+					}
+				}
+			},
+			tooltip: { //
+				grouped: false, contents: function (d, defaultTitleFormat, defaultValueFormat, color) { 
+					var html = '<table class="c3-tooltip"> <tbody><tr>';
+					html += '<th colspan="2">'+chartToolTipArray[d[0].index].cityName+'</th></tr>';
+					html += '<tr class="c3-tooltip-name--XPO-transportation-cost">';
+					html += '<td class="name"><span style="background-color: #1dd09c"></span>Rate per mile</td>';
+					html += '<td class="value">'+chartToolTipArray[d[0].index].ratePerMile+'</td></tr>';
+					html += '<tr class="c3-tooltip-name--Market-max-transportation-cost">';
+					html += '<td class="name"><span style="background-color: #9c3773"></span>Price per mile</td>';
+					html += '<td class="value">'+chartToolTipArray[d[0].index].pricePerMile+'</td></tr>';
+					html += '<tr class="c3-tooltip-name--Market-average-transportation-cost">';
+					html += '<td class="name"><span style="background-color: #8080ff"></span>Profit</td>';
+					html += '<td class="value">'+$scope.GetFixedValue(chartToolTipArray[d[0].index].profit)+'%</td></tr></tbody></table>';
+					return html;
+				} 
+			},
+			color: {
+				pattern: chartColorArray
+			}
+		});
+
 		setTimeout(function () {
-		    chart.load({
-		        columns: [tempArrayProfit]
-		    });
+			chart.load({
+				columns: [tempArrayXPOPrice]
+			});
+		}, 1500);
+
+		setTimeout(function () {
+			chart.load({
+				columns: [tempArrayProfit]
+			});
 		}, 3000);
-		
+
 	}
 
 	$scope.GetFixedValue = function (value) {
-	    if(value != undefined && !isNaN(parseInt(value))){
-	        return value.toFixed(2);
-	    }
+		if(value != undefined && !isNaN(parseInt(value))){
+			return value.toFixed(2);
+		}
 	}
-	
+
 	$scope.generateGaugeChart = function(){
 		var value = parseInt($('select :selected').val());
-	    if (value == null || value == undefined || isNaN(value))
-	        value = $scope.selectedOriginCity;
-	    
-	    var tempArrayProfit = new Array();
-	    //tempArrayProfit.push("Profit value");
+		if (value == null || value == undefined || isNaN(value))
+			value = $scope.selectedOriginCity;
 
-	    var tempCityArray = new Array();
-	    var chartToolTipArray = new Array();
-	    for (var i = 0; i < dataArray.length; i++) {
-	        if ($scope.originCities[value].cityName == dataArray[i].OriginCity) {
-	            tempArrayProfit.push(dataArray[i].OurPricePerMile - dataArray[i].OurRatePerMile);
-	        }
-	    }
-	    
-	    var overAllPercentage = tempArrayProfit.reduce((a, b) => a + b, 0);
-	    
-	    c3.generate({
-	    	bindto: d3.select("#modelGaugeChart"),
-	        data: {
-	            columns: [
-	                ['Overall Profit', overAllPercentage.toFixed(2)]
-	            ],
-	            type: 'gauge'
-	        },
-	        gauge: {
-	            label: {
-	                format: function(value, ratio) {
-	                    return value;
-	                },
-	                show: false
-	            },
-		        min: 0,
-		        max: 100,
-		        units: ' %',
-		        width: 80 // for adjusting arc thickness
-	        },
-	        color: {
-	            pattern: ['#FF0000', '#F97600', '#F6C600', '#60B044'], // the three color levels for the percentage values.
-	            threshold: {
-//	                unit: 'value', // percentage is default
-//	                max: 200, // 100 is default
-	                values: [3, 5, 10, 15]
-	            }
-	        },
-	        size: {
-	            height: 180
-	        }
-	    });
+		var tempArrayProfit = new Array();
+		//tempArrayProfit.push("Profit value");
+
+		var tempCityArray = new Array();
+		var chartToolTipArray = new Array();
+		for (var i = 0; i < dataArray.length; i++) {
+			if ($scope.originCities[value].cityName == dataArray[i].OriginCity) {
+				tempArrayProfit.push(dataArray[i].OurPricePerMile - dataArray[i].OurRatePerMile);
+			}
+		}
+
+		var overAllPercentage = tempArrayProfit.reduce((a, b) => a + b, 0);
+
+		c3.generate({
+			bindto: d3.select("#modelGaugeChart"),
+			data: {
+				columns: [
+				          ['Overall Profit', overAllPercentage.toFixed(2)]
+				          ],
+				          type: 'gauge'
+			},
+			gauge: {
+				label: {
+					format: function(value, ratio) {
+						return value;
+					},
+					show: false
+				},
+				min: 0,
+				max: 100,
+				units: ' %',
+				width: 80 // for adjusting arc thickness
+			},
+			color: {
+				pattern: ['#FF0000', '#F97600', '#F6C600', '#60B044'], // the three color levels for the percentage values.
+				threshold: {
+//					unit: 'value', // percentage is default
+//					max: 200, // 100 is default
+					values: [3, 5, 10, 15]
+				}
+			},
+			size: {
+				height: 180
+			}
+		});
 	}
 }]);

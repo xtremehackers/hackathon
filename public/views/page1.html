@@ -27,15 +27,15 @@
 			</div>
 
 			<div style="text-align: center;" ng-init="UpdateBarChart()">
-			<p>Origin City</p>
+				<span><b>Origin City:</b> </span>
 				<!-- <select
 					ng-options="item.id as item.cityName for item in originCities"
 					ng-model="selectedOriginCity" ng-change="UpdateBarChart(this)"></select> -->
-					<select ng-model="selectedOriginCity" ng-change="UpdateBarChart(this)">
-						<option ng-repeat="item in originCities" value="{{item.id}}">
-							{{item.cityName}}
-						</option>
-					</select>
+				<select ng-model="selectedOriginCity"
+					ng-change="UpdateBarChart(this)">
+					<option ng-repeat="item in originCities" value="{{item.id}}">
+						{{item.cityName}}</option>
+				</select>
 			</div>
 			<br />
 			<div>
@@ -44,6 +44,26 @@
 					<div class="panel-heading">
 
 						<i class="zmdi zmdi-trending-up"></i> Market Price Estimation
+
+
+						<ul class="actions"
+							style="float: right; top: -5px; position: relative;">
+							<li class="dropdown" dropdown><a href="" dropdown-toggle>
+									<i class="zmdi zmdi-more-vert" style="color: #fff;"></i>
+							</a>
+
+								<ul class="dropdown-menu dropdown-menu-right">
+									<li ng-repeat="chartType in chartTypesPE track by $index"
+										ng-model="selectedChartTypePE"><a
+										ng-click="changePriceEstimation(chartType)">{{chartType}}</a></li>
+								</ul></li>
+						</ul>
+
+						<span style="float: right;"><input type="checkbox"
+							ng-click="gridCheckBoxPE()"> <span
+							style="top: -2px; position: relative; padding-right: 10px;">Show
+								Grid</span></span>
+
 					</div>
 					<div class="panel-body">
 						<div id="modelBar"></div>
@@ -61,67 +81,73 @@
 					</div>
 				</div>
 
-                <br /> <br />
-                <div class="panel panel-primary">
-                    <div class="panel-heading">
-
-                        <i class="zmdi zmdi-trending-up"></i> XPO profit values data
-                    </div>
-                    <div class="panel-body">
-                        <div id="modelXPOProfitBar"></div>
-                    </div>
-                </div>
-
 				<br /> <br />
 				<div class="panel panel-primary">
 					<div class="panel-heading">
 
-						<i class="zmdi zmdi-trending-up"></i> Market cost comparison Graph
+						<i class="zmdi zmdi-trending-up"></i> XPO Profit Values Data
 					</div>
 					<div class="panel-body">
-						<p ng-hide="isNutralFrequency">
-							Least Frequent Destinations: <ul><li
-								ng-repeat="item in leastFrequentDestination">
-								{{item.val}} </li></ul>
-						</p>
-
-						<p ng-hide="isNutralFrequency">Most Frequent Destinations:
-						<ul>
-							<li ng-repeat="item in mostFrequentDestination">
-								{{item.val}}</li>
-						</ul>
-						</p>
-
-						<p ng-show="isNutralFrequency">Fright movement is normal for
-							destinations:
-						<ul ng-show="isNutralFrequency">
-							<li ng-repeat="item in mostFrequentDestination">
-								{{item.val}}</li>
-						</ul>
-						</p>
+						<div id="modelXPOProfitBar"></div>
 					</div>
 				</div>
 
-
 				<br /> <br />
-				<div class="panel panel-primary">
-					<div class="panel-heading">
 
-						<i class="zmdi zmdi-trending-up"></i> Monthly Estimation
-					</div>
-					<div class="panel-body">
-						<div id="modelBarDate"></div>
+				<div class="col-md-4">
+					<div class="panel panel-primary">
+						<div class="panel-heading">
+
+							<i class="zmdi zmdi-trending-up"></i> Market Cost Comparison
+							Graph
+						</div>
+						<div class="panel-body">
+							<p ng-hide="isNutralFrequency">Least Frequent Destinations:
+							<ul>
+								<li ng-repeat="item in leastFrequentDestination">
+									{{item.val}}</li>
+							</ul>
+							</p>
+
+							<p ng-hide="isNutralFrequency">Most Frequent Destinations:
+							<ul>
+								<li ng-repeat="item in mostFrequentDestination">
+									{{item.val}}</li>
+							</ul>
+							</p>
+
+							<p ng-show="isNutralFrequency">Fright movement is normal for
+								destinations:
+							<ul ng-show="isNutralFrequency">
+								<li ng-repeat="item in mostFrequentDestination">
+									{{item.val}}</li>
+							</ul>
+							</p>
+						</div>
 					</div>
 				</div>
-				
-				<br /> <br />
-				<div class="panel panel-primary">
-					<div class="panel-heading">
 
-						<i class="zmdi zmdi-trending-up"></i> Monthly Estimation
+				<div class="col-md-4">
+					<div class="panel panel-primary">
+						<div class="panel-heading">
+
+							<i class="zmdi zmdi-trending-up"></i> Monthly Estimation
+						</div>
+						<div class="panel-body">
+							<div id="modelBarDate"></div>
+						</div>
 					</div>
-					<div class="panel-body">
-						<div id="modelGaugeChart"></div>
+				</div>
+
+				<div class="col-md-4">
+					<div class="panel panel-primary">
+						<div class="panel-heading">
+
+							<i class="zmdi zmdi-trending-up"></i> Overall Profit
+						</div>
+						<div class="panel-body">
+							<div id="modelGaugeChart"></div>
+						</div>
 					</div>
 				</div>
 			</div>
